@@ -15,13 +15,16 @@ class Rook:
         self.x, self.y = self.convertCoord(x,y)
 
     def convertCoord(self,x,y):
-        return x*cell_width,y*cell_height
+        return x * cell_width,y * cell_height
 
-    def display_rook(self):
+    def display_w_rook(self):
         white_rook_img  = loadImage(path + "/images/white_rook.png")
-        black_rook_img  = loadImage(path + "/images/black_rook.png")
         image(white_rook_img, self.x,self.y,cell_width,cell_height)
     
+    def display_b_rook(self):
+        black_rook_img  = loadImage(path + "/images/black_rook.png")
+        image(black_rook_img, self.x,self.y,cell_width,cell_height)
+        
     def move(self, x,y):
         self.x, self.y = self.convertCoord(x,y)
         self.display_rook()
@@ -29,7 +32,22 @@ class Rook:
     def check_valid(self):
         pass
     
+class Knight:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
 
+    def convertCoord(self,x,y):
+        return x * cell_width,y * cell_height
+    
+    def display_w_knight(self):
+        white_knight_img  = loadImage(path + "/images/white_knight.png")
+        image(white_knight_img, self.x,self.y,cell_width,cell_height)
+    
+    def display_b_knight(self):
+        black_knight_img  = loadImage(path + "/images/black_knight.png")
+        image(black_knight_img, self.x,self.y,cell_width,cell_height)
+    
+    
 class Chess_board:
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows
@@ -62,10 +80,27 @@ class Chess_board:
             pos_y += cell_height
 
     def display_rook(self):
-        rook1 = Rook(0,0)
-        rook1.display_rook()
-        rook2 = Rook(7,0)
-        rook2.display_rook()
+        rook_w1 = Rook(0,0)
+        rook_w1.display_w_rook()
+        rook_w2 = Rook(7,0)
+        rook_w2.display_w_rook()
+        
+        rook_b1 = Rook(0,7)
+        rook_b1.display_b_rook()
+        rook_b2 = Rook(7,7)
+        rook_b2.display_b_rook()
+    
+    def display_knight(self):
+        knight_w1 = Knight(1,0)
+        knight_w1.display_w_knight()
+        knight_w2 = Knight(6,0)
+        knight_w2.display_w_knight()
+        
+        knight_b1 = Knight(1,7)
+        knight_b1.display_b_knight()
+        knight_b2 = Knight(6,7)
+        knight_b2.display_b_knight()
+        
     
    # # def add_chess_pieces(self):
    #      white_pawn_img   = loadImage(path + "/images/white_pawn.png")
@@ -88,4 +123,5 @@ def draw():
     chess_grid.display_background()
     #chess_grid.add_chess_pieces()
     chess_grid.display_rook()
+    chess_grid.display_knight()
     #background(155)
