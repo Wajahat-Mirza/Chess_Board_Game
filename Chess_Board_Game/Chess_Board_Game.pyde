@@ -15,7 +15,7 @@ class Rook:
         self.x, self.y = self.convertCoord(x,y)
 
     def convertCoord(self,x,y):
-        return x*64,y*64
+        return x*cell_width,y*cell_height
 
     def display_rook(self):
         white_rook_img  = loadImage(path + "/images/white_rook.png")
@@ -53,13 +53,13 @@ class Chess_board:
                  # Algorithm. The even-ness or odd-ness of the sum of row and col has same color          
                     cell_A_img = loadImage(path + "/images/white.png") 
                     image(cell_A_img, pos_x,pos_y,cell_width,cell_height)
-                    pos_x += 64
+                    pos_x += cell_width
                 else:
                     cell_B_img = loadImage(path + "/images/black.png")
-                    image(cell_B_img, pos_x,pos_y,64,64)
-                    pos_x += 64
+                    image(cell_B_img, pos_x,pos_y,cell_width,cell_height)
+                    pos_x += cell_width
             pos_x  = 0
-            pos_y += 64
+            pos_y += cell_height
 
     def display_rook(self):
         rook1 = Rook(0,0)
