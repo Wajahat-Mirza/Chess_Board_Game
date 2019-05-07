@@ -9,7 +9,7 @@ num_rows = 8
 num_cols = 8 
 cell_height = 64
 cell_width  = 64
-
+    
 class Rook:
     def __init__(self, x, y):
         self.x, self.y = self.convertCoord(x,y)
@@ -46,7 +46,68 @@ class Knight:
     def display_b_knight(self):
         black_knight_img  = loadImage(path + "/images/black_knight.png")
         image(black_knight_img, self.x,self.y,cell_width,cell_height)
+
+class Bishop:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
+
+    def convertCoord(self,x,y):
+        return x * cell_width,y * cell_height
+
+    def display_w_bishop(self):
+        white_bishop_img  = loadImage(path + "/images/white_bishop.png")
+        image(white_bishop_img, self.x,self.y,cell_width,cell_height)
     
+    def display_b_bishop(self):
+        black_bishop_img  = loadImage(path + "/images/black_bishop.png")
+        image(black_bishop_img, self.x,self.y,cell_width,cell_height)
+
+class Queen:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
+
+    def convertCoord(self,x,y):
+        return x * cell_width,y * cell_height
+
+    def display_w_queen(self):
+        white_queen_img  = loadImage(path + "/images/white_queen.png")
+        image(white_queen_img, self.x,self.y,cell_width,cell_height)
+    
+    def display_b_queen(self):
+        black_queen_img  = loadImage(path + "/images/black_queen.png")
+        image(black_queen_img, self.x,self.y,cell_width,cell_height)
+
+class King:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
+
+    def convertCoord(self,x,y):
+        return x * cell_width,y * cell_height
+
+    def display_w_king(self):
+        white_king_img  = loadImage(path + "/images/white_king.png")
+        image(white_king_img, self.x,self.y,cell_width,cell_height)
+    
+    def display_b_king(self):
+        black_king_img  = loadImage(path + "/images/black_king.png")
+        image(black_king_img, self.x,self.y,cell_width,cell_height)
+    
+class Pawn:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
+
+    def convertCoord(self,x,y):
+        return x * cell_width,y * cell_height
+    
+    # def display_w_pawn(self):
+    #     for row in range(num_rows):
+    #         for col in range(num_cols):
+    #             white_pawn_img  = loadImage(path + "/images/white_pawn.png")
+    #             image(white_pawn_img, self.x,self.y,cell_width,cell_height)
+               
+    #             black_pawn_img  = loadImage(path + "/images/black_pawn.png")
+    #             image(black_pawn_img, self.x,self.y,cell_width,cell_height)
+    #     return row, col
     
 class Chess_board:
     def __init__(self, num_rows, num_cols):
@@ -100,28 +161,47 @@ class Chess_board:
         knight_b1.display_b_knight()
         knight_b2 = Knight(6,7)
         knight_b2.display_b_knight()
-        
     
-   # # def add_chess_pieces(self):
-   #      white_pawn_img   = loadImage(path + "/images/white_pawn.png")
-   #      white_rook_img   = loadImage(path + "/images/white_rook.png")
-   #      white_knight_img = loadImage(path + "/images/white_knight.png")
-   #      white_bishop_img = loadImage(path + "/images/white_bishop.png")
-   #      white_queen_img  = loadImage(path + "/images/white_queen.png")
-   #      white_king_img   = loadImage(path + "/images/white_king.png")
+    def display_bishop(self):
+        bishop_w1 = Bishop(2,0)
+        bishop_w1.display_w_bishop()
+        bishop_w1 = Bishop(5,0)
+        bishop_w1.display_w_bishop()
         
-   #      image(white_rook_img, 0,0,cell_width,cell_height)
+        bishop_b1 = Bishop(2,7)
+        bishop_b1.display_b_bishop()
+        bishop_b1 = Bishop(5,7)
+        bishop_b1.display_b_bishop()
         
+    def display_queen(self):
+        queen_w = Queen(3,0)
+        queen_w.display_w_queen()
+        
+        queen_b = Queen(3,7)
+        queen_b.display_b_queen()
+        
+    def display_king(self):
+        king_w = King(4,0)
+        king_w.display_w_king()
+        
+        king_b = King(4,7)
+        king_b.display_b_king()
+        
+    # def display_pawn(self):
+    #     pawn_w = Pawn()
+    #     pawn_w.display_w_pawn()
         
 chess_grid = Chess_board(num_rows, num_cols) 
   
 def setup():
     size(num_rows * cell_height, num_cols * cell_width)
-    #background(155)
 
 def draw():
     chess_grid.display_background()
-    #chess_grid.add_chess_pieces()
     chess_grid.display_rook()
     chess_grid.display_knight()
-    #background(155)
+    chess_grid.display_bishop()
+    chess_grid.display_queen()
+    chess_grid.display_king()
+    #chess_grid.display_pawn()
+    
