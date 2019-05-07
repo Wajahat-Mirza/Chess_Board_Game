@@ -10,16 +10,26 @@ num_cols = 8
 cell_height = 64
 cell_width  = 64
 
-"""
-class Chess_Cell:
-    def __init__(self, row, col): 
-        self.row = row 
-        self.col = col 
-        #self.chess_background_img = loadImage(path + "/images/.png")
-        
-    def display(self):
-        image(self.chess_background_img, self.col * cell_width, self.row * cell_height)
-   """ 
+class Rook:
+    def __init__(self, x, y):
+        self.x, self.y = self.convertCoord(x,y)
+
+    def convertCoord(self,x,y):
+        return x*64,y*64
+
+    def display_rook(self):
+        white_rook_img  = loadImage(path + "/images/white_rook.png")
+        black_rook_img  = loadImage(path + "/images/black_rook.png")
+        image(white_rook_img, self.x,self.y,cell_width,cell_height)
+    
+    def move(self, x,y):
+        self.x, self.y = self.convertCoord(x,y)
+        self.display_rook()
+    
+    def check_valid(self):
+        pass
+    
+
 class Chess_board:
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows
@@ -42,7 +52,7 @@ class Chess_board:
                 if (col + row) % 2 == 1: 
                  # Algorithm. The even-ness or odd-ness of the sum of row and col has same color          
                     cell_A_img = loadImage(path + "/images/white.png") 
-                    image(cell_A_img, pos_x,pos_y,64,64)
+                    image(cell_A_img, pos_x,pos_y,cell_width,cell_height)
                     pos_x += 64
                 else:
                     cell_B_img = loadImage(path + "/images/black.png")
@@ -50,6 +60,23 @@ class Chess_board:
                     pos_x += 64
             pos_x  = 0
             pos_y += 64
+
+    def display_rook(self):
+        rook1 = Rook(0,0)
+        rook1.display_rook()
+        rook2 = Rook(7,0)
+        rook2.display_rook()
+    
+   # # def add_chess_pieces(self):
+   #      white_pawn_img   = loadImage(path + "/images/white_pawn.png")
+   #      white_rook_img   = loadImage(path + "/images/white_rook.png")
+   #      white_knight_img = loadImage(path + "/images/white_knight.png")
+   #      white_bishop_img = loadImage(path + "/images/white_bishop.png")
+   #      white_queen_img  = loadImage(path + "/images/white_queen.png")
+   #      white_king_img   = loadImage(path + "/images/white_king.png")
+        
+   #      image(white_rook_img, 0,0,cell_width,cell_height)
+        
         
 chess_grid = Chess_board(num_rows, num_cols) 
   
@@ -59,4 +86,6 @@ def setup():
 
 def draw():
     chess_grid.display_background()
+    #chess_grid.add_chess_pieces()
+    chess_grid.display_rook()
     #background(155)
