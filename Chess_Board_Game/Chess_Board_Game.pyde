@@ -47,13 +47,6 @@ class Knight(Pieces):
             possible_moves.append(i)
         print(possible_moves)
             
-        
-        
-        
-        #1. make list of all moves. list dynamic ho gy. jaisey ke x +1 , y +1, allMoves = []
-        #2. from list of all moves, check which moves are valid according to 
-        # the position of this specific knight. Iski specific position tumhein
-        # self.x, self.y se mil jaye gi: possMoves = []
         #3. Highlight moves: specific position walay box par color kardo ge
     #def check_move (check validity) 
     
