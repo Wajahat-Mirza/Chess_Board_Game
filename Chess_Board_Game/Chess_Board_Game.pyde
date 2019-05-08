@@ -12,7 +12,7 @@ cell_width  = 64
 
 class Pieces:
     def __init__(self, x, y, img_path):
-        self.x, self.y = self.convertCoord(x,y)
+        self.x, self.y = x, y
         self.img_path = img_path
 
     def convertCoord(self,x,y):
@@ -20,28 +20,51 @@ class Pieces:
    
     def display_pieces(self):
         piece_img  = loadImage(path + "/images/" + self.img_path + ".png")
-        image(piece_img, self.x,self.y,cell_width,cell_height)
+        x, y = self.convertCoord(self.x, self.y)
+        image(piece_img, x, y, cell_width, cell_height)
     
 class Rook(Pieces):
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
     def possible_moves(self):
+        print("rook")
         #returns the possible moves
-        return None
-    pass 
 
 class Knight(Pieces):
-    pass
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
+    def possible_moves(self):
+        print("knight")
 
 class Bishop(Pieces):
-    pass
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
+    def possible_moves(self):
+        print("Bishop")
 
 class Queen(Pieces):
-    pass 
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
+    def possible_moves(self):
+        print("Queen") 
 
 class King(Pieces):
-    pass
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
+    def possible_moves(self):
+        print("King")
     
 class Pawn(Pieces):
-    pass
+    def __init__(self, x, y, img_path):
+        Pieces.__init__(self, x, y, img_path)
+        
+    def possible_moves(self):
+        print("Pawn")
     
 class Chess_board:
     def __init__(self, num_rows, num_cols):#pieces
@@ -59,11 +82,11 @@ class Chess_board:
         
         self.pieces = self.create_pieces()
         
-    def get_piece(self, x, y):
+    def get_piece(self, y, x):
         for piece in self.pieces:
-            # return a piece corresponding to x and y
-            return None
-        
+            if piece.y == y and piece.x == x:
+                return piece
+        # return a piece corresponding to x and y
         
     def create_pieces(self):
         chess_pieces = []
@@ -115,8 +138,8 @@ class Chess_board:
         king_black =King(4,7, "black_white") 
         chess_pieces.append(king_black)
         return chess_pieces
+        print(chess_pieces)
          
-        
     def display_background(self):
         pos_x = 0
         pos_y = 0 
@@ -176,7 +199,10 @@ def mouseClicked(self):
     col = mouseX // cell_width
     row = mouseY // cell_height
     print("clicked at "  + str(row) + " " + str(col))
-    piece = chess_grid.get_piece(col, row)
+    
+    
+    piece = chess_grid.get_piece(row, col)
+    print(piece)
     piece.possible_moves()
 
     
