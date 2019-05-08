@@ -41,7 +41,7 @@ class Pawn(Pieces):
     pass
     
 class Chess_board:
-    def __init__(self, num_rows, num_cols):
+    def __init__(self, num_rows, num_cols, ):#pieces
         self.num_rows = num_rows
         self.num_cols = num_cols
         self.game_over = False
@@ -53,7 +53,60 @@ class Chess_board:
                 self.chess_row.append(0)
             self.chess_grid.append(self.chess_row) 
         print(self.chess_grid)                # for test purposes
-    
+        
+        self.pieces = self.create_pieces()
+        
+    def create_pieces(self):
+        pieces = []
+        for i in range(num_cols):
+            pawn_w = Pawn(i,1, "white_pawn")
+            pieces.append(pawn_w)
+
+        rock_white_left = Rook(0,0, "white_rock") 
+        pieces.append(rock_white_left)
+        rock_white_right = Rook(7,0, "white_rock")
+        pieces.append(rock_white_right)
+        
+        knight_white_left =Knight(1,0, "white_knight")
+        pieces.append(knight_white_left)
+        knight_white_right =Knight(6,0, "white_knight")
+        pieces.append(knight_white_right)
+        
+        bishop_white_left = Bishop(2,0, "white_bishop")
+        pieces.append(bishop_white_left)
+        bishop_white_right = Bishop(5,0, "white_bishop")
+        pieces.append(bishop_white_right)
+        
+        queen_white = Queen(3,0, "white_queen")
+        pieces.append(queen_white)
+        king_white =King(4,0, "king_white") 
+        pieces.append(king_white)
+        
+        for j in range(num_cols):
+            pawn_b = Pawn(j,6, "black_pawn")
+            pieces.append(pawn_b)
+       
+        rock_black_left = Rook(0,7, "black_rock") 
+        pieces.append(rock_black_left)
+        rock_black_right = Rook(7,7, "black_rock")
+        pieces.append(rock_black_right)
+        
+        knight_black_left =Knight(1,7, "black_knight")
+        pieces.append(knight_black_left)
+        knight_black_right =Knight(6,7, "black_knight")
+        pieces.append(knight_black_right)
+        
+        bishop_black_left = Bishop(2,7, "black_bishop")
+        pieces.append(bishop_black_left)
+        bishop_black_right = Bishop(5,7, "black_bishop")
+        pieces.append(bishop_black_right)
+        
+        queen_black = Queen(3,7, "black_queen")
+        pieces.append(queen_black)
+        king_black =King(4,7, "black_white") 
+        pieces.append(king_black)
+         
+        
     def display_background(self):
         pos_x = 0
         pos_y = 0 
@@ -94,8 +147,11 @@ class Chess_board:
         for j in range(num_cols):
             pawn_b = Pawn(j,6, "black_pawn")
             pawn_b.display_pieces()
-        
-chess_grid = Chess_board(num_rows, num_cols) 
+    
+    
+    
+    
+chess_grid = Chess_board(num_rows, num_cols) #pieces
   
 def setup():
     size(num_rows * cell_height, num_cols * cell_width)
@@ -108,10 +164,24 @@ def draw():
     chess_grid.display("queen", [[3,0],[3,7]])
     chess_grid.display("king", [[4,0],[4,7]])
     
+    #chess_grid.update()
+    
     chess_grid.display_pawn()
 
 def mouseClicked(self):
     col = mouseX // cell_width
     row = mouseY // cell_height
     print("clicked at "  + str(row) + " " + str(col))
+
     
+    
+# class Moves (Pieces, Chess_board):
+#     def __init__(self, Rock, Knight,Bishop, Queen, King, Pawn): 
+#         self.Rock = Rock 
+#         self.Knight = Knight 
+#         self.Bishop = Bishop 
+#         self.Queen = Queen 
+#         self.King = King 
+#         self.Pawn = Pawn 
+        
+#     def RockMoves(num_rows, num_cols)  
