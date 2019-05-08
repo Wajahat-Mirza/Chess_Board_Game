@@ -48,14 +48,17 @@ class Knight(Pieces):
         
     def possible_moves(self):
         print("knight")
-        all_moves = [[self.y-1,self.x-2],[self.y-2,self.x-1],[self.y-2, self.x+1],[self.y-1, self.x+2],
-                     [self.y+1,self.x+2],[self.y+2, self.x+1],[self.y+2,self.x-1],[self.y+1,self.x-2]]
+        #all_moves = [[self.y-1,self.x-2],[self.y-2,self.x-1],[self.y-2, self.x+1],[self.y-1, self.x+2],
+          #          [self.y+1,self.x+2],[self.y+2, self.x+1],[self.y+2,self.x-1],[self.y+1,self.x-2]]
+        all_moves = [[self.x-2,self.y-1],[self.x-1,self.y-2],[self.x+1,self.y-2],[self.x+2,self.y-1],
+                     [self.x+2,self.y+1],[self.x+1,self.y+2],[self.x-1,self.y+2],[self.x-2,self.y+1]]
         print(all_moves)
         possible_moves = []
         for i in all_moves:
-            if i[0] < 0 or i[1] <0 or i[0] > 7 or i[1] > 7:
-                continue
-            possible_moves.append(i)
+            if(chess_grid.piece_inside_board(i[0],i[1])):
+           # if i[0] < 0 or i[1] <0 or i[0] > 7 or i[1] > 7:
+               # continue
+                possible_moves.append(i)
         print(possible_moves)
             
         #3. Highlight moves: specific position walay box par color kardo ge
