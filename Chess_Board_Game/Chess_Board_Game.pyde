@@ -251,16 +251,3 @@ def mouseClicked(self):
     piece = chess_grid.get_piece(row, col)
     print(piece)
     piece.possible_moves()
-
-    
-    
-# class Moves (Pieces, Chess_board):
-#     def __init__(self, Rook, Knight,Bishop, Queen, King, Pawn): 
-#         self.Rook = Rook 
-#         self.Knight = Knight 
-#         self.Bishop = Bishop 
-#         self.Queen = Queen 
-#         self.King = King 
-#         self.Pawn = Pawn 
-        
-#     def RockMoves(num_rows, num_cols)  
