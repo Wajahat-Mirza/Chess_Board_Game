@@ -61,14 +61,30 @@ class Knight(Pieces):
         #3. Highlight moves: specific position walay box par color kardo ge
     #def check_move (check validity) 
     
-        
-
 class Bishop(Pieces):
     def __init__(self, x, y, img_path):
         Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("Bishop")
+    
+    def possible_moves(self): 
+        directions = [[1,1],[-1,1],[-1,-1],[1,-1]]
+        moves = []
+        possible_x = self.x
+        possible_y = self.y
+        for direction in directions: #search for squares in every direction diagonally around the piece
+            for counter in range(0,8):
+                possible_x += direction[0]
+                possible_y += direction[1]
+                if(chess_grid.piece_inside_board(possible_x,possible_y)): 
+                    moves.append([possible_x,possible_y])
+                else: 
+                    break
+        print(moves)
+        return moves
+    
+    def obtain_possible_moves(self):
+        possible_moves = self.possible_moves()
+        print(possible_moves)
+        return possible_moves
 
 class Queen(Pieces):
     def __init__(self, x, y, img_path):
@@ -205,6 +221,12 @@ class Chess_board:
         for j in range(num_cols):
             pawn_b = Pawn(j,6, "black_pawn")
             pawn_b.display_pieces()
+    
+    def piece_inside_board(self, y, x):
+        if (x < 0) or (x > 7) or (y < 0) or (y > 7):
+            return False
+        else:
+            return True
     
 chess_grid = Chess_board(num_rows, num_cols) #pieces
   
