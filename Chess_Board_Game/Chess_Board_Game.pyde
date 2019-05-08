@@ -48,6 +48,27 @@ class Knight(Pieces):
         
     def possible_moves(self):
         print("knight")
+        all_moves = [[self.y-1,self.x-2],[self.y-2,self.x-1],[self.y-2, self.x+1],[self.y-1, self.x+2],
+                     [self.y+1,self.x+2],[self.y+2, self.x+1],[self.y+2,self.x-1],[self.y+1,self.x-2]]
+        print(all_moves)
+        possible_moves = []
+        for i in all_moves:
+            if i[0] < 0 or i[1] <0 or i[0] > 7 or i[1] > 7:
+                continue
+            possible_moves.append(i)
+        print(possible_moves)
+            
+        
+        
+        
+        #1. make list of all moves. list dynamic ho gy. jaisey ke x +1 , y +1, allMoves = []
+        #2. from list of all moves, check which moves are valid according to 
+        # the position of this specific knight. Iski specific position tumhein
+        # self.x, self.y se mil jaye gi: possMoves = []
+        #3. Highlight moves: specific position walay box par color kardo ge
+    #def check_move (check validity) 
+    
+        
 
 class Bishop(Pieces):
     def __init__(self, x, y, img_path):
