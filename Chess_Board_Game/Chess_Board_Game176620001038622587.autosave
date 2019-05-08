@@ -12,7 +12,7 @@ cell_width  = 64
 
 class Pieces:
     def __init__(self, x, y, img_path):
-        self.x, self.y = x, y
+        self.x, self.y = self.convertCoord(x,y)
         self.img_path = img_path
 
     def convertCoord(self,x,y):
@@ -20,76 +20,37 @@ class Pieces:
    
     def display_pieces(self):
         piece_img  = loadImage(path + "/images/" + self.img_path + ".png")
-        x, y = self.convertCoord(self.x, self.y)
-        image(piece_img, x, y, cell_width, cell_height)
+        image(piece_img, self.x,self.y,cell_width,cell_height)
     
 class Rook(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
+#     def __init__(self, col,row):
+#         self.col = col 
+#         self.row = row 
         
-    def possible_moves(self):
-        solutionMoves = [] 
-        for y in range(self.y, num_rows):
-            for x in range(self.x, num_cols):
-            #if self.x != Pieces: 
-                solutionMoves.append((x, y))
-        print(len(solutionMoves))
-        # for x in range(self.x, num_cols):
-        #     #if self.y != Pieces: 
-        #         solutionMoves.append((self.y,x))
-        #     print(x)
+#     def possible_moves(self):
+#         solutionMoves = [] 
+#         for r in range(youposition, col):
+    
+    #               
         
-        print("rook")
-        #returns the possible moves
+#         #returns the possible moves
+#         return None
+    pass 
 
 class Knight(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("knight")
-        all_moves = [[self.y-1,self.x-2],[self.y-2,self.x-1],[self.y-2, self.x+1],[self.y-1, self.x+2],
-                     [self.y+1,self.x+2],[self.y+2, self.x+1],[self.y+2,self.x-1],[self.y+1,self.x-2]]
-        print(all_moves)
-        possible_moves = []
-        for i in all_moves:
-            if i[0] < 0 or i[1] <0 or i[0] > 7 or i[1] > 7:
-                continue
-            possible_moves.append(i)
-        print(possible_moves)
-            
-        #3. Highlight moves: specific position walay box par color kardo ge
-    #def check_move (check validity) 
-    
-        
+    pass
 
 class Bishop(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("Bishop")
+    pass
 
 class Queen(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("Queen") 
+    pass 
 
 class King(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("King")
+    pass
     
 class Pawn(Pieces):
-    def __init__(self, x, y, img_path):
-        Pieces.__init__(self, x, y, img_path)
-        
-    def possible_moves(self):
-        print("Pawn")
+    pass
     
 class Chess_board:
     def __init__(self, num_rows, num_cols):#pieces
@@ -107,11 +68,11 @@ class Chess_board:
         
         self.pieces = self.create_pieces()
         
-    def get_piece(self, y, x):
+    def get_piece(self, x, y):
         for piece in self.pieces:
-            if piece.y == y and piece.x == x:
-                return piece
-        # return a piece corresponding to x and y
+            # return a piece corresponding to x and y
+            return None
+        
         
     def create_pieces(self):
         chess_pieces = []
@@ -119,9 +80,9 @@ class Chess_board:
             pawn_w = Pawn(i,1, "white_pawn")
             chess_pieces.append(pawn_w)
 
-        rook_white_left = Rook(0,0, "white_rock") 
+        rook_white_left = Rook(0,0, "white_rook") 
         chess_pieces.append(rook_white_left)
-        rook_white_right = Rook(7,0, "white_rock")
+        rook_white_right = Rook(7,0, "white_rook")
         chess_pieces.append(rook_white_right)
         
         knight_white_left =Knight(1,0, "white_knight")
@@ -163,8 +124,8 @@ class Chess_board:
         king_black =King(4,7, "black_white") 
         chess_pieces.append(king_black)
         return chess_pieces
-        print(chess_pieces)
          
+        
     def display_background(self):
         pos_x = 0
         pos_y = 0 
@@ -224,21 +185,8 @@ def mouseClicked(self):
     col = mouseX // cell_width
     row = mouseY // cell_height
     print("clicked at "  + str(row) + " " + str(col))
-    
-    
-    piece = chess_grid.get_piece(row, col)
-    print(piece)
-    piece.possible_moves()
+    piece = chess_grid.get_piece(col, row)
+    #piece.possible_moves()
 
     
     
-# class Moves (Pieces, Chess_board):
-#     def __init__(self, Rook, Knight,Bishop, Queen, King, Pawn): 
-#         self.Rook = Rook 
-#         self.Knight = Knight 
-#         self.Bishop = Bishop 
-#         self.Queen = Queen 
-#         self.King = King 
-#         self.Pawn = Pawn 
-        
-#     def RockMoves(num_rows, num_cols)  
