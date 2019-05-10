@@ -4,8 +4,8 @@
 
 import os 
 path = os.getcwd()
-add library("minim")
-audio_track = Minim(this)
+#add library("minim")
+#audio_track = Minim(this)
 
 num_rows = 8 
 num_cols = 8 
@@ -16,7 +16,7 @@ class Pieces:
     def __init__(self, x, y, img_path):
         self.x, self.y = x, y
         self.img_path = img_path
-        self.backend_game_sound = audio_track.loadFile(path + "/sounds/chessbackground") # Need to download sound tracks
+       # self.backend_game_sound = audio_track.loadFile(path + "/sounds/chessbackground") # Need to download sound tracks
 
     def convertCoord(self,x,y):
         return x * cell_width,y * cell_height
@@ -67,28 +67,21 @@ class Bishop(Pieces):
     def __init__(self, x, y, img_path):
         Pieces.__init__(self, x, y, img_path)
     
-    def possible_moves(self): 
-        directions = [[1,1],[-1,1],[-1,-1],[1,-1]]
-        moves = []
-        possible_x = self.x
-        possible_y = self.y
-        for direction in directions: #search for squares in every direction diagonally around the piece
-            for counter in range(0,8):
-                possible_x += direction[0]
-                possible_y += direction[1]
-                if(chess_grid.piece_inside_board(possible_x,possible_y)): 
-                    moves.append([possible_x,possible_y])
-                else: 
-                    break
-        print(moves)
-        return moves
-        # problems here: 1. rather than on 6,6, it comes on 7,7 and rather than 1,1 it comes on 0,0.
-        # 2. works fine for white bishops. Doesn't work fully for black bishops
-    
-    def obtain_possible_moves(self):
-        possible_moves = self.possible_moves()
+    def possible_moves(self): # Improve this algorithm later 
+        all_moves = [[self.x+1,self.y+1],[self.x+2,self.y+2],[self.x+3,self.y+3],[self.x+4,self.y+4],
+                     [self.x+5,self.y+5],[self.x+6,self.y+6],[self.x+7,self.y+7],
+                     [self.x-1,self.y+1],[self.x-2,self.y+2],[self.x-3,self.y+3],[self.x-4,self.y+4],
+                     [self.x-5,self.y+5],[self.x-6,self.y+6],[self.x-7,self.y+7],
+                     [self.x+1,self.y-1],[self.x+2,self.y-2],[self.x+3,self.y-3],[self.x+4,self.y-4],
+                     [self.x+5,self.y-5],[self.x+6,self.y-6],[self.x+7,self.y-7],
+                     [self.x-1,self.y-1],[self.x-2,self.y-2],[self.x-3,self.y-3],[self.x-4,self.y-4],
+                     [self.x-5,self.y-5],[self.x-6,self.y-6],[self.x-7,self.y-7]]
+        print(all_moves)
+        possible_moves = []
+        for i in all_moves:
+            if (chess_grid.piece_inside_board(i[0],i[1])):
+                    possible_moves.append(i)
         print(possible_moves)
-        return possible_moves
 
 class Queen(Pieces):
     def __init__(self, x, y, img_path):
@@ -106,12 +99,9 @@ class King(Pieces):
         all_moves = [[self.x-1,self.y+1],[self.x,self.y+1],[self.x+1,self.y+1],[self.x+1,self.y],
                      [self.x+1,self.y-1],[self.x,self.y-1],[self.x-1,self.y-1],[self.x-1,self.y]]
         print(all_moves)
-       
         possible_moves = []
         for i in all_moves:
             if(chess_grid.piece_inside_board(i[0],i[1])):
-           # if i[0] < 0 or i[1] <0 or i[0] > 7 or i[1] > 7:
-               # continue
                 possible_moves.append(i)
         print(possible_moves)
             
@@ -239,9 +229,12 @@ class Chess_board:
     
     def piece_inside_board(self, y, x):
         if (x < 0) or (x > 7) or (y < 0) or (y > 7):
-            return False
+            False
         else:
             return True
+        
+    def ally_or_foe(self):
+        pass
     
 chess_grid = Chess_board(num_rows, num_cols) #pieces
   
