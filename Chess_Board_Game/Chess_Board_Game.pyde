@@ -30,20 +30,22 @@ class Rook(Pieces):
     def __init__(self, x, y, img_path):
         Pieces.__init__(self, x, y, img_path)
         
-    def possible_moves(self):
-        all_moves = [] 
-        for y in range(self.y, num_rows):
-            for x in range(self.x, num_cols):
-            #if self.x != Pieces: 
-                all_moves.append((x, y))
-        print(len(all_moves))
-        # for x in range(self.x, num_cols):
-        #     #if self.y != Pieces: 
-        #         solutionMoves.append((self.y,x))
-        #     print(x)
-        
-        print("rook")
-        #returns the possible moves
+    def possible_moves(self): # Improve this algorithm later 
+        print("Rook")
+        all_moves = [[self.x,self.y+1],[self.x,self.y+2],[self.x,self.y+3],[self.x,self.y+4],
+                     [self.x,self.y+5],[self.x,self.y+6],[self.x,self.y+7],
+                     [self.x+1,self.y],[self.x+2,self.y],[self.x+3,self.y],[self.x+4,self.y],
+                     [self.x+5,self.y],[self.x+6,self.y],[self.x+7,self.y],
+                     [self.x-1,self.y],[self.x-2,self.y],[self.x-3,self.y],[self.x-4,self.y],
+                     [self.x-5,self.y],[self.x-6,self.y],[self.x-7,self.y],
+                     [self.x,self.y-1],[self.x,self.y-2],[self.x,self.y-3],[self.x,self.y-4],
+                     [self.x,self.y-5],[self.x,self.y-6],[self.x,self.y-7]]
+        print(all_moves)
+        possible_moves = []
+        for i in all_moves:
+            if (chess_grid.piece_inside_board(i[0],i[1])):
+                    possible_moves.append(i)
+        print(possible_moves)
 
 class Knight(Pieces):
     def __init__(self, x, y, img_path):
@@ -87,8 +89,34 @@ class Queen(Pieces):
     def __init__(self, x, y, img_path):
         Pieces.__init__(self, x, y, img_path)
         
-    def possible_moves(self):
+    def possible_moves(self): # Improve Algorithm later 
         print("Queen") 
+        all_moves = [[self.x+1,self.y+1],[self.x+2,self.y+2],[self.x+3,self.y+3],[self.x+4,self.y+4],
+                     [self.x+5,self.y+5],[self.x+6,self.y+6],[self.x+7,self.y+7],
+                     [self.x,self.y+1],[self.x,self.y+2],[self.x,self.y+3],[self.x,self.y+4],
+                     [self.x,self.y+5],[self.x,self.y+6],[self.x,self.y+7],
+                     [self.x+1,self.y],[self.x+2,self.y],[self.x+3,self.y],[self.x+4,self.y],
+                     [self.x+5,self.y],[self.x+6,self.y],[self.x+7,self.y],
+                     
+                     [self.x-1,self.y+1],[self.x-2,self.y+2],[self.x-3,self.y+3],[self.x-4,self.y+4],
+                     [self.x-5,self.y+5],[self.x-6,self.y+6],[self.x-7,self.y+7],
+                     [self.x-1,self.y],[self.x-2,self.y],[self.x-3,self.y],[self.x-4,self.y],
+                     [self.x-5,self.y],[self.x-6,self.y],[self.x-7,self.y],
+                     
+                     [self.x-1,self.y-1],[self.x-2,self.y-2],[self.x-3,self.y-3],[self.x-4,self.y-4],
+                     [self.x-5,self.y-5],[self.x-6,self.y-6],[self.x-7,self.y-7],
+                     [self.x,self.y-1],[self.x,self.y-2],[self.x,self.y-3],[self.x,self.y-4],
+                     [self.x,self.y-5],[self.x,self.y-6],[self.x,self.y-7],
+        
+                     [self.x+1,self.y-1],[self.x+2,self.y-2],[self.x+3,self.y-3],[self.x+4,self.y-4],
+                     [self.x+5,self.y-5],[self.x+6,self.y-6],[self.x+7,self.y-7]]
+        print(all_moves)
+        possible_moves = []
+        for i in all_moves:
+            if(chess_grid.piece_inside_board(i[0],i[1])):
+                possible_moves.append(i)
+        print(possible_moves)
+        print(len(possible_moves))
 
 class King(Pieces):
     def __init__(self, x, y, img_path):
