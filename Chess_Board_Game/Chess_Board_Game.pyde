@@ -35,29 +35,61 @@ class Rook(Pieces):
     def possible_moves(self): # Improve this algorithm later 
         print("Rook")
         possible_moves = []
+        
         offset = 1
         while(True):
-            if not chess_grid.piece_inside_board(self.x + offset,self.y):
+            if not chess_grid.piece_inside_board(self.y,self.x + offset):
                 break
-            if(chess_grid.get_piece(self.x + offset,self.y) == 0):
-                possible_moves.append([self.x + offset,self.y])
-            elif chess_grid.get_piece(self.x + offset,self.y).color != self.color:
-                possible_moves.append([self.x + offset,self.y])
+            if(chess_grid.get_piece(self.y,self.x + offset) == 0):
+                possible_moves.append([self.y,self.x + offset])
+            elif chess_grid.get_piece(self.y,self.x + offset).color != self.color:
+                possible_moves.append([self.y,self.x + offset])
                 break
             else:
                 break
             offset += 1
+            
         offset = 1
-        # while(True):
-        #     if(chess_grid.piece_inside_board(self.x - offset,self.y) == 0):
-        #         possible_moves.append([self.x - offset,self.y])
-        #     elif chess_grid.piece_inside_board(self.x - offset,self.y).color != self.color:
-        #         possible_moves.append([self.x - offset,self.y])
-        #         break
-        #     else:
-        #         break
-        #     offset += 1
+        while(True):
+            if not chess_grid.piece_inside_board(self.y,self.x - offset):
+                break
+            if(chess_grid.get_piece(self.y,self.x - offset) == 0):
+                possible_moves.append([self.y,self.x - offset])
+            elif chess_grid.get_piece(self.y,self.x - offset).color != self.color:
+                possible_moves.append([self.y,self.x - offset])
+                break
+            else:
+                break
+            offset += 1
+            
+        offset = 1
+        while(True):
+            if not chess_grid.piece_inside_board(self.y + offset,self.x):
+                break
+            if(chess_grid.get_piece(self.y + offset,self.x) == 0):
+                possible_moves.append([self.y + offset,self.x])
+            elif chess_grid.get_piece(self.y + offset,self.x).color != self.color:
+                possible_moves.append([self.y + offset,self.x])
+                break
+            else:
+                break
+            offset += 1
+            
+        offset = 1
+        while(True):
+            if not chess_grid.piece_inside_board(self.y - offset,self.x):
+                break
+            if(chess_grid.get_piece(self.y - offset,self.x) == 0):
+                possible_moves.append([self.y - offset,self.x])
+            elif chess_grid.get_piece(self.y - offset,self.x).color != self.color:
+                possible_moves.append([self.y - offset,self.x])
+                break
+            else:
+                break
+            offset += 1
+        
         print(possible_moves) 
+        return possible_moves
             
         # all_moves = [[self.x,self.y+1],[self.x,self.y+2],[self.x,self.y+3],[self.x,self.y+4],
         #              [self.x,self.y+5],[self.x,self.y+6],[self.x,self.y+7],
@@ -85,15 +117,50 @@ class Knight(Pieces):
         Pieces.__init__(self, x, y, img_path,color)
         
     def possible_moves(self):
-        print("knight")
-        all_moves = [[self.x-2,self.y-1],[self.x-1,self.y-2],[self.x+1,self.y-2],[self.x+2,self.y-1],
-                     [self.x+2,self.y+1],[self.x+1,self.y+2],[self.x-1,self.y+2],[self.x-2,self.y+1]]
-        print(all_moves)
+        print("Knight")
         possible_moves = []
-        for i in all_moves:
-            if(chess_grid.piece_inside_board(i[0],i[1])):
-                possible_moves.append(i)
+        
+        offset_y = 1
+        offset_x = 2
+        while(True):
+            if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
+                break
+            if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
+                print("gello")
+                possible_moves.append([self.y - offset_y,self.x - offset_x])
+            elif chess_grid.get_piece(self.y - offset_y,self.x - offset_x).color != self.color:
+                possible_moves.append([self.y - offset_y,self.x - offset_x])
+                print("hello")
+                break
+            else:
+                break
+        
+        offset_y = 1
+        offset_x = 2
+        while(True):
+            if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
+                break
+            if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
+                print("gello")
+                possible_moves.append([self.y + offset_y,self.x + offset_x])
+            elif chess_grid.get_piece(self.y + offset_y,self.x + offset_x).color != self.color:
+                print("hello")
+                possible_moves.append([self.y + offset_y,self.x + offset_x])
+                break
+            else:
+                break
+        
         print(possible_moves)
+        
+        # print("knight")
+        # all_moves = [[self.x-2,self.y-1],[self.x-1,self.y-2],[self.x+1,self.y-2],[self.x+2,self.y-1],
+        #              [self.x+2,self.y+1],[self.x+1,self.y+2],[self.x-1,self.y+2],[self.x-2,self.y+1]]
+        # print(all_moves)
+        # possible_moves = []
+        # for i in all_moves:
+        #     if(chess_grid.piece_inside_board(i[0],i[1])):
+        #         possible_moves.append(i)
+        # print(possible_moves)
             
         #3. Highlight moves: specific position walay box par color kardo ge
     #def check_move (check validity) 
@@ -103,20 +170,53 @@ class Bishop(Pieces):
         Pieces.__init__(self, x, y, img_path,color)
     
     def possible_moves(self): # Improve this algorithm later 
-        all_moves = [[self.x+1,self.y+1],[self.x+2,self.y+2],[self.x+3,self.y+3],[self.x+4,self.y+4],
-                     [self.x+5,self.y+5],[self.x+6,self.y+6],[self.x+7,self.y+7],
-                     [self.x-1,self.y+1],[self.x-2,self.y+2],[self.x-3,self.y+3],[self.x-4,self.y+4],
-                     [self.x-5,self.y+5],[self.x-6,self.y+6],[self.x-7,self.y+7],
-                     [self.x+1,self.y-1],[self.x+2,self.y-2],[self.x+3,self.y-3],[self.x+4,self.y-4],
-                     [self.x+5,self.y-5],[self.x+6,self.y-6],[self.x+7,self.y-7],
-                     [self.x-1,self.y-1],[self.x-2,self.y-2],[self.x-3,self.y-3],[self.x-4,self.y-4],
-                     [self.x-5,self.y-5],[self.x-6,self.y-6],[self.x-7,self.y-7]]
-        print(all_moves)
+        print("Bishop")
         possible_moves = []
-        for i in all_moves:
-            if (chess_grid.piece_inside_board(i[0],i[1])):
-                    possible_moves.append(i)
+        offset_y = 1
+        offset_x = 1
+        while(True):
+            if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
+                break
+            if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
+                possible_moves.append([self.y + offset_y,self.x + offset_x])
+            elif chess_grid.get_piece(self.y + offset_y,self.x + offset_x).color != self.color:
+                possible_moves.append([self.y + offset_y,self.x + offset_x])
+                break
+            else:
+                break
+            offset_y += 1
+            offset_x += 1
+        
+        offset_y = 1
+        offset_x = 1
+        while(True):
+            if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
+                break
+            if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
+                possible_moves.append([self.y - offset_y,self.x - offset_x])
+            elif chess_grid.get_piece(self.y - offset_y,self.x - offset_x).color != self.color:
+                possible_moves.append([self.y - offset_y,self.x - offset_x])
+                break
+            else:
+                break
+            offset_y += 1
+            offset_x += 1
         print(possible_moves)
+        
+        # all_moves = [[self.x+1,self.y+1],[self.x+2,self.y+2],[self.x+3,self.y+3],[self.x+4,self.y+4],
+        #              [self.x+5,self.y+5],[self.x+6,self.y+6],[self.x+7,self.y+7],
+        #              [self.x-1,self.y+1],[self.x-2,self.y+2],[self.x-3,self.y+3],[self.x-4,self.y+4],
+        #              [self.x-5,self.y+5],[self.x-6,self.y+6],[self.x-7,self.y+7],
+        #              [self.x+1,self.y-1],[self.x+2,self.y-2],[self.x+3,self.y-3],[self.x+4,self.y-4],
+        #              [self.x+5,self.y-5],[self.x+6,self.y-6],[self.x+7,self.y-7],
+        #              [self.x-1,self.y-1],[self.x-2,self.y-2],[self.x-3,self.y-3],[self.x-4,self.y-4],
+        #              [self.x-5,self.y-5],[self.x-6,self.y-6],[self.x-7,self.y-7]]
+        # print(all_moves)
+        # possible_moves = []
+        # for i in all_moves:
+        #     if (chess_grid.piece_inside_board(i[0],i[1])):
+        #             possible_moves.append(i)
+        # print(possible_moves)
 
 class Queen(Pieces):
     def __init__(self, x, y, img_path,color):
@@ -189,39 +289,39 @@ class Chess_board:
         
         self.create_pieces()
     
-    def get_piece(self, y, x):
+    def get_piece(self, x, y):
         return self.chess_grid_board[x][y]
         
     def create_pieces(self):
         for i in range(num_cols):
             print(i)
-            self.chess_grid_board[i][1] = Pawn(i,1, "white_pawn", "white")
-            self.chess_grid_board[i][num_rows - 2] = Pawn(i,num_rows - 2, "black_pawn", "black")
+            self.chess_grid_board[1][i] = Pawn(i,1, "white_pawn", "white")
+            self.chess_grid_board[num_rows - 2][i] = Pawn(i,num_rows - 2, "black_pawn", "black")
 
         # Improve this code later 
         self.chess_grid_board[0][0] = Rook(0,0, "white_rook", "white")
-        self.chess_grid_board[7][0] = Rook(7,0, "white_rook", "white")
+        self.chess_grid_board[0][7] = Rook(7,0, "white_rook", "white")
         
-        self.chess_grid_board[1][0] = Knight(1,0, "white_knight", "white")
-        self.chess_grid_board[6][0] = Knight(6,0, "white_knight", "white")
+        self.chess_grid_board[0][1] = Knight(1,0, "white_knight", "white")
+        self.chess_grid_board[0][6] = Knight(6,0, "white_knight", "white")
         
-        self.chess_grid_board[2][0] = Bishop(2,0, "white_bishop", "white")
-        self.chess_grid_board[5][0] = Bishop(5,0, "white_bishop", "white")
+        self.chess_grid_board[0][2] = Bishop(2,0, "white_bishop", "white")
+        self.chess_grid_board[0][5] = Bishop(5,0, "white_bishop", "white")
     
-        self.chess_grid_board[3][0] = Queen(3,0, "white_queen", "white")
-        self.chess_grid_board[4][0] = King(4,0, "white_king", "white")
+        self.chess_grid_board[0][3] = Queen(3,0, "white_queen", "white")
+        self.chess_grid_board[0][4] = King(4,0, "white_king", "white")
         
-        self.chess_grid_board[0][7] = Rook(0,7, "black_rook", "black")
+        self.chess_grid_board[7][0] = Rook(0,7, "black_rook", "black")
         self.chess_grid_board[7][7] = Rook(7,7, "black_rook", "black")
         
-        self.chess_grid_board[1][7] = Knight(1,7, "black_knight", "black")
-        self.chess_grid_board[6][7] = Knight(6,7, "black_knight", "black")
+        #self.chess_grid_board[7][1] = Knight(1,7, "black_knight", "black")
+        #self.chess_grid_board[7][6] = Knight(6,7, "black_knight", "black")
         
-        self.chess_grid_board[2][7] = Bishop(2,7, "black_bishop", "black")
-        self.chess_grid_board[5][7] = Bishop(5,7, "black_bishop", "black")
+        self.chess_grid_board[7][2] = Bishop(2,7, "black_bishop", "black")
+        self.chess_grid_board[7][5] = Bishop(5,7, "black_bishop", "black")
     
-        self.chess_grid_board[3][7] = Queen(3,7, "black_queen", "black")
-        self.chess_grid_board[4][7] = King(4,7, "black_king", "black")
+        self.chess_grid_board[7][3] = Queen(3,7, "black_queen", "black")
+        self.chess_grid_board[7][4] = King(4,7, "black_king", "black")
     
         
         print(self.chess_grid_board)
@@ -273,9 +373,9 @@ class Chess_board:
     #         pawn_b = Pawn(j,6, "black_pawn", "black")
     #         pawn_b.display_pieces()
     
-    def piece_inside_board(self, y, x):
+    def piece_inside_board(self, x, y):
         if (x < 0) or (x > 7) or (y < 0) or (y > 7):
-            False
+            return False
         else:
             return True
         
@@ -304,7 +404,7 @@ def mouseClicked(self):
     
     
     piece = chess_grid.get_piece(row, col)
-    print(piece)
+    print(piece, row, col)
     piece.possible_moves()
 
 print(chess_grid.create_pieces())
