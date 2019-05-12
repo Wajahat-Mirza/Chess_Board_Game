@@ -12,36 +12,29 @@ num_cols = 8
 cell_height = 64
 cell_width  = 64
 
-#selected_move = []
-
-class Pieces:
+class Pieces:                                       # This is the base class
     def __init__(self, x, y, img_path, color):
         self.color = color
-        #self.player = player
         self.x, self.y = x, y
         self.img_path = img_path
        # self.backend_game_sound = audio_track.loadFile(path + "/sounds/chessbackground") # Need to download sound tracks
 
-    def convertCoord(self,x,y):
+    def convertCoord(self,x,y):                      # convert the coordinates 
         return x * cell_width,y * cell_height
    
     def display_pieces(self):
         piece_img  = loadImage(path + "/images/" + self.img_path + ".png")
-        
         x, y = self.convertCoord(self.x, self.y)
         image(piece_img, x, y, cell_width, cell_height)
-        
     
-class Rook(Pieces):
+class Rook(Pieces):                                  
     def __init__(self, x, y, img_path, color):
         Pieces.__init__(self, x, y, img_path, color)
         
-    def possible_moves(self): # Improve this algorithm later 
-        print("Rook")
+    def possible_moves(self):                        # This checks all the possible moves from the given position of the piece           
         possible_moves = []
-        
         offset = 1
-        while(True):
+        while(True):                                 # This loop checks moves on x_increment place/scale               
             if not chess_grid.piece_inside_board(self.y,self.x + offset):
                 break
             if(chess_grid.get_piece(self.y,self.x + offset) == 0):
@@ -54,7 +47,7 @@ class Rook(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                 # This loop checks moves on x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y,self.x - offset):
                 break
             if(chess_grid.get_piece(self.y,self.x - offset) == 0):
@@ -67,7 +60,7 @@ class Rook(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset,self.x):
                 break
             if(chess_grid.get_piece(self.y + offset,self.x) == 0):
@@ -80,7 +73,7 @@ class Rook(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset,self.x):
                 break
             if(chess_grid.get_piece(self.y - offset,self.x) == 0):
@@ -91,7 +84,6 @@ class Rook(Pieces):
             else:
                 break
             offset += 1
-        print(possible_moves) 
         return possible_moves
             
 class Knight(Pieces):
@@ -99,12 +91,11 @@ class Knight(Pieces):
         Pieces.__init__(self, x, y, img_path,color)
         
     def possible_moves(self):
-        print("Knight")
         possible_moves = []
         
         offset_y = 1
         offset_x = 2
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
@@ -118,7 +109,7 @@ class Knight(Pieces):
         
         offset_y = 1
         offset_x = 2
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
@@ -132,7 +123,7 @@ class Knight(Pieces):
         
         offset_y = 1
         offset_x = 2
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x + offset_x) == 0):
@@ -146,7 +137,7 @@ class Knight(Pieces):
         
         offset_y = 1
         offset_x = 2
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x - offset_x) == 0):
@@ -160,7 +151,7 @@ class Knight(Pieces):
         
         offset_y = 2
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
@@ -174,7 +165,7 @@ class Knight(Pieces):
         
         offset_y = 2
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x + offset_x) == 0):
@@ -187,7 +178,7 @@ class Knight(Pieces):
                 break
         offset_y = 2
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
@@ -201,7 +192,7 @@ class Knight(Pieces):
             
         offset_y = 2
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x - offset_x) == 0):
@@ -212,23 +203,18 @@ class Knight(Pieces):
                 break
             else:
                 break
-
-        print(possible_moves)
-        return possible_moves
-            
-        #3. Highlight moves: specific position walay box par color kardo ge
-    #def check_move (check validity) 
+        return possible_moves    
     
 class Bishop(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
     
-    def possible_moves(self): # Improve this algorithm later 
-        print("Bishop")
+    def possible_moves(self): 
         possible_moves = []
+        
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
@@ -243,7 +229,7 @@ class Bishop(Pieces):
         
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
@@ -258,7 +244,7 @@ class Bishop(Pieces):
        
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_increment, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x - offset_x) == 0):
@@ -273,7 +259,7 @@ class Bishop(Pieces):
         
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                 # This loop checks moves on y_decrement, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x + offset_x) == 0):
@@ -285,20 +271,17 @@ class Bishop(Pieces):
                 break
             offset_y += 1
             offset_x += 1
-        
-        print(possible_moves)
         return possible_moves
         
 class Queen(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
         
-    def possible_moves(self): # Improve Algorithm
-        print("Queen") 
+    def possible_moves(self): 
         possible_moves = []
         
         offset = 1
-        while(True):
+        while(True):                                  # This loop checks moves on x_increment place/scale
             if not chess_grid.piece_inside_board(self.y,self.x + offset):
                 break
             if(chess_grid.get_piece(self.y,self.x + offset) == 0):
@@ -311,7 +294,7 @@ class Queen(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                  # This loop checks moves on x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y,self.x - offset):
                 break
             if(chess_grid.get_piece(self.y,self.x - offset) == 0):
@@ -324,7 +307,7 @@ class Queen(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                   # This loop checks moves on y_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset,self.x):
                 break
             if(chess_grid.get_piece(self.y + offset,self.x) == 0):
@@ -337,7 +320,7 @@ class Queen(Pieces):
             offset += 1
             
         offset = 1
-        while(True):
+        while(True):                                  # This loop checks moves on y_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset,self.x):
                 break
             if(chess_grid.get_piece(self.y - offset,self.x) == 0):
@@ -351,7 +334,7 @@ class Queen(Pieces):
             
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                  # This loop checks moves on y_increment, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x + offset_x) == 0):
@@ -366,7 +349,7 @@ class Queen(Pieces):
         
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                  # This loop checks moves on y_decrement, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x - offset_x) == 0):
@@ -381,7 +364,7 @@ class Queen(Pieces):
        
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                  # This loop checks moves on y_increment, x_decrement place/scale
             if not chess_grid.piece_inside_board(self.y + offset_y,self.x - offset_x):
                 break
             if(chess_grid.get_piece(self.y + offset_y,self.x - offset_x) == 0):
@@ -396,7 +379,7 @@ class Queen(Pieces):
         
         offset_y = 1
         offset_x = 1
-        while(True):
+        while(True):                                  # This loop checks moves on y_decrement, x_increment place/scale
             if not chess_grid.piece_inside_board(self.y - offset_y,self.x + offset_x):
                 break
             if(chess_grid.get_piece(self.y - offset_y,self.x + offset_x) == 0):
@@ -408,8 +391,6 @@ class Queen(Pieces):
                 break
             offset_y += 1
             offset_x += 1
-        
-        print(possible_moves)
         return possible_moves
 
 class King(Pieces):
@@ -543,8 +524,8 @@ class Pawn(Pieces):
     def possible_moves(self):
         print("Pawn")
         possible_moves = []
+        offset = 1
         if chess_grid.get_piece(self.y,self.x).color == "black":
-            offset = 1
             while(True):
                 if not chess_grid.piece_inside_board(self.y - offset,self.x):
                     break
@@ -556,7 +537,7 @@ class Pawn(Pieces):
                     break
                 else:
                     break
-            offset += 1
+            #offset += 1
         print(possible_moves)
         return possible_moves
         
@@ -587,7 +568,7 @@ class Chess_board:
         for i in range(num_cols):
             print(i)
             #self.chess_grid_board[1][i] = Pawn(i,1, "white_pawn", "white")
-            #self.chess_grid_board[num_rows - 2][i] = Pawn(i,num_rows - 2, "black_pawn", "black")
+            self.chess_grid_board[num_rows - 2][i] = Pawn(i,num_rows - 2, "black_pawn", "black")
 
         # Improve this code later 
         self.chess_grid_board[0][0] = Rook(0,0, "white_rook", "white")
