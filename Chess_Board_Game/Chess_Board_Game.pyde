@@ -537,7 +537,22 @@ class Pawn(Pieces):
                     break
                 else:
                     break
-            #offset += 1
+            offset = 1
+        
+        offset = 2
+        count = 0
+        if chess_grid.get_piece(self.y,self.x).color == "black" and count == 0:
+            while(True):
+                if not chess_grid.piece_inside_board(self.y - offset,self.x):
+                    break
+                if(chess_grid.get_piece(self.y - offset,self.x) == 0):
+                    possible_moves.append([self.y - offset,self.x])
+                elif (chess_grid.get_piece(self.y - offset,self.x).color != self.color):
+                    possible_moves.append([self.y - offset,self.x])
+                    break
+                else:
+                    break
+                count += 1
         print(possible_moves)
         return possible_moves
         
