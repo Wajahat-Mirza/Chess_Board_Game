@@ -525,6 +525,8 @@ class Pawn(Pieces):
         print("Pawn")
         possible_moves = []
         
+        #bugs in pawn movement: 1. double movemnt even if there is a piece in front of it from starting position 
+        # 2. backward movement is allowed which should not be the case
         offset = 1
         if chess_grid.get_piece(self.y,self.x).color == "black":
             if not chess_grid.piece_inside_board(self.y - offset,self.x):
@@ -539,17 +541,18 @@ class Pawn(Pieces):
                 possible_moves.append([self.y - offset,self.x - offset])
        
         offset = 2
+        offset_a = 1
         if self.y == 6:
             if chess_grid.get_piece(self.y,self.x).color == "black": #and count == 0:
                 if not chess_grid.piece_inside_board(self.y - offset,self.x):
                     return possible_moves
-                if chess_grid.get_piece(self.y - offset,self.x) == 0:
+                if chess_grid.get_piece(self.y - offset,self.x) == 0 and chess_grid.get_piece(self.y - offset_a,self.x) == 0:
                     count = 1
                     possible_moves.append([self.y - offset,self.x])
 
         offset = 1
         if chess_grid.get_piece(self.y,self.x).color == "white":
-            if not chess_grid.piece_inside_board(self.y - offset,self.x):
+            if not chess_grid.piece_inside_board(self.y + offset,self.x):
                 return possible_moves
             if chess_grid.get_piece(self.y + offset,self.x) == 0:
                 possible_moves.append([self.y + offset,self.x])
@@ -561,24 +564,14 @@ class Pawn(Pieces):
                     possible_moves.append([self.y + offset,self.x - offset])
         
         offset = 2
+        offset_a = 1
         if self.y == 1:
-            if chess_grid.get_piece(self.y,self.x).color == "white": #and count == 0:
+            if chess_grid.get_piece(self.y,self.x).color == "white": 
                 if not chess_grid.piece_inside_board(self.y + offset,self.x):
                     return possible_moves
-                if chess_grid.get_piece(self.y + offset,self.x) == 0:
+                if chess_grid.get_piece(self.y + offset,self.x) == 0 and chess_grid.get_piece(self.y + offset_a,self.x) == 0:
                     count = 1
                     possible_moves.append([self.y + offset,self.x])
-        
-        # offset = 1
-        # if chess_grid.get_piece(self.y,self.x).color == "white":
-        #     if not chess_grid.piece_inside_board(self.y + offset,self.x):
-        #         return possible_moves
-        #     if chess_grid.get_piece(self.y + offset,self.x) == 0:
-        #         possible_moves.append([self.y + offset,self.x])
-        #     elif (chess_grid.get_piece(self.y + offset,self.x + offset).color != self.color) or (chess_grid.get_piece(self.y + offset,self.x - offset).color != self.color):
-        #         possible_moves.append([self.y + offset,self.x + offset],[self.y + offset,self.x - offset])
-        #    # offset = 1
-   
         return possible_moves
         
     
@@ -602,7 +595,6 @@ class Chess_board:
         self.create_pieces()
     
     def get_piece(self, x, y):
-        print("yeh kun ha asa ", x,y)
         return self.chess_grid_board[x][y]
         
     def create_pieces(self):
