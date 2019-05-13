@@ -728,7 +728,7 @@ class Button:
         # print(self.x, mouseX, self.x + self.width)
         if self.contains_mouse():
             # fill(100, 0, 0)
-            fill(100)
+            fill(150)
             # textSize(50)
             text(self.label, self.x, self.y)
             # Game.state = self.mode 
@@ -737,7 +737,6 @@ class Button:
             fill(255)
             textSize(40)
             text(self.label, self.x, self.y)
-    
 
 class Display: 
     def __init__(self, width,height): 
@@ -746,45 +745,38 @@ class Display:
         self.height = height 
         self.state = "menu"
         self.buttons = [] 
+        self.returnbutton = []
+        self.chessimage = loadImage(path + "/images/chess_main_image.png")
+
+
         #self.sound_beginning = audioPlayer.loadFile(path + "sound/")
         
         # Add Buttons; Start, Instruction, Scoreboard 
         self.buttons.append(Button("Start Game", self.width//2-100, self.height//2 - 50, 50, 250,"game" ))
         self.buttons.append(Button("Instructions", self.width//2-100, self.height//2 + 50, 50, 250,"instruction"))
         self.buttons.append(Button("Scoreboard", self.width//2-100, self.height//2 + 150, 50, 250, "scoreboard"))
-    
+        
+        # Return button 
+        self.returnbutton.append(Button("Return",self.width//2-100, self.height//2 - 50, 50, 250, "return"))
+        
     def menu_display(self):
         background(155)
+        image(self.chessimage, 0, 0, height, width)
+        # image(chessimage, num_rows*64, num_cols*64, 64,64)
         for button in self.buttons:
             button.display()
-    
-    # def game_state(self): 
-    #     print("Game Starts") 
         
     def instruction_display(self): 
-        # background(0) 
-        print("Rule of Chess") 
+        background(155)
+        
+        print("Rules of Chess") 
         
     def scoreboard_display(self): 
-        # background(0)
+        background(155)
         print("Bananananan")
-        
-    # def displayScoreboard(self): 
-    #     print("Scoreboard") 
-              
-    # def display(self):
-    #     if self.state == "menu": 
-    #         self.displayMenu()
-    #     elif self.state =="game":
-    #         self.displayGame()
-    #     elif self.state == "instructions":
-    #         self.displayInstructions()
-    #     elif self.state == "scoreboard":
-    #         self.displayScoreboard()
         
 chess_grid = Chess_board(num_rows, num_cols)
 Game = Display(500,500) 
-
 
 def setup():
     size(num_rows * cell_height, num_cols * cell_width)
@@ -803,26 +795,12 @@ def draw():
 
 def mouseClicked(self):
     if Game.state == "menu":
-        print("put click code for menu mode here")
         col = mouseX // cell_width
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
         for b in Game.buttons:
             if b.contains_mouse():
                 Game.state = b.mode
-        
-        # if Game.buttons[0].contains_mouse: 
-        #     Game.state = "game"
-        #     print("transition into game")
-        #     print(Game.buttons[0].contains_mouse)
-        # elif Game.buttons[1].contains_mouse: 
-        #     print("transition into instruction")
-        #     Game.state = "instructions"
-        #     print(Game.buttons[0].contains_mouse)
-        # elif Game.buttons[2].contains_mouse: 
-        #     print("transition into scoreboard")
-        #     Game.state = "scoreboard" 
-        #     print(Game.buttons[0].contains_mouse)
   
     elif Game.state == "game":
         col = mouseX // cell_width
@@ -833,5 +811,3 @@ def mouseClicked(self):
         
         chess_grid.user_clicked(row, col)
         print(piece, row, col)
-        
-## Add elif     
