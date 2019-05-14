@@ -520,6 +520,7 @@ class King(Pieces):
             for j in i.possible_moves():
                 if j in possible_moves: 
                     possible_moves.remove(j)
+        
         return possible_moves
             
 class Pawn(Pieces):
@@ -529,20 +530,18 @@ class Pawn(Pieces):
     def possible_moves(self):
         possible_moves = []
         
-        # Bug:
-        # 2. backward movement is allowed which should not be the case
         offset = 1                                   # This condition checks moves on black pawns for one forward, and diagonal if attack possible
         if chess_grid.get_piece(self.y,self.x).color == "black":
             if not chess_grid.piece_inside_board(self.y - offset,self.x):
                 return possible_moves
             if chess_grid.get_piece(self.y - offset,self.x) == 0:
                 possible_moves.append([self.y - offset,self.x])
-        if self.x + offset <= 7:
-            if chess_grid.get_piece(self.y - offset,self.x + offset) != 0 and (chess_grid.get_piece(self.y - offset,self.x + offset).color != self.color):
-                possible_moves.append([self.y - offset,self.x + offset])
-        if self.x - offset >= 0:
-            if chess_grid.get_piece(self.y - offset,self.x - offset) != 0 and (chess_grid.get_piece(self.y - offset,self.x - offset).color != self.color):
-                possible_moves.append([self.y - offset,self.x - offset])
+            if self.x + offset <= 7:
+                if chess_grid.get_piece(self.y - offset,self.x + offset) != 0 and (chess_grid.get_piece(self.y - offset,self.x + offset).color != self.color):
+                    possible_moves.append([self.y - offset,self.x + offset])
+            if self.x - offset >= 0:
+                if chess_grid.get_piece(self.y - offset,self.x - offset) != 0 and (chess_grid.get_piece(self.y - offset,self.x - offset).color != self.color):
+                    possible_moves.append([self.y - offset,self.x - offset])
        
         offset = 2
         offset_a = 1
@@ -656,13 +655,9 @@ class Chess_board:
         if len(self.possible_highlights) != 0:                  # this is display the blue image for possible movements of the clicked piece 
             for i in self.possible_highlights: 
                 image(possible_move_img, i[1] * cell_width,i[0] * cell_height, cell_width, cell_height)
-       
-         # if self.possible_highlights != 0:
-        #     for j in self.possible_highlights:
-        #         if j.color in self.possible_highlights != self.color:
-        #             image(possible_attack_img, j[1] * cell_width,j[0] * cell_height, cell_width, cell_height)
+                if i == self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] and i.color != self.turn_color: 
+                    image(possible_attack_img, i[1] * cell_width,i[0] * cell_height, cell_width, cell_height)
         return
-            
 
     def display(self):                  # this method is displaying the pieces
         for i in range(self.num_rows):
@@ -689,7 +684,7 @@ class Chess_board:
             if chess_grid.get_piece(row,col) == 0: 
                 return
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
-                print(check)
+                #print("abhy chekc yeh ha", check)
                 self.highlighted = [row,col]
                 current_piece = self.chess_grid_board[row][col]
                 self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
@@ -697,8 +692,9 @@ class Chess_board:
                 # This for the check. Serious bugs present
                 if self.turn_color == 'black':
                     if check_black == True:
-                        self.possible_highlights = []
+                        #self.possible_highlights = []
                         for move in self.black_king.possible_moves():
+                           # print("yeh King ke moves hain", self.black_king.possible_moves())
                             if self.check_move(move):
                                 self.possible_highlights.append(move) 
                 
@@ -706,6 +702,7 @@ class Chess_board:
                     if check_white == True:
                         self.possible_highlights = []
                         for move in self.white_king.possible_moves():
+                            #print("yeh white King ke moves hain", self.white_king.possible_moves())
                             if self.check_move(move):
                                 self.possible_highlights.append(move)      
             else:
@@ -741,14 +738,15 @@ class Chess_board:
             for j in i:
                 if j == 0:
                     continue
-                if j.color == "white":
+               
+                if j.color == self.turn_color:
+                    #print("Yhe tu bagairat ha")
                     for k in j.possible_moves(): 
                         if k == move:
                             return False
                 else:
-                    for k in j.possible_moves():
-                        if k == move:
-                            return False
+                    #print("yeh check kr raha hun")
+                    True
         return True
                 
     
