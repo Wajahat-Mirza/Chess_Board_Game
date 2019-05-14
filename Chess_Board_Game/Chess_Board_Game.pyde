@@ -14,6 +14,10 @@ num_cols = 8
 cell_height = 64
 cell_width  = 64
 
+check = False 
+check_black = False
+check_white = False
+
 class Pieces:                                       # This is the base class
     def __init__(self, x, y, img_path, color):
         self.color = color
@@ -399,21 +403,20 @@ class King(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
         
-    def possible_moves(self):
-        print("King") 
+    def possible_moves(self): 
         possible_moves = []
         
         offset_x = 1
         while(True):                                 # This loop checks moves on x_increment plane/scale
             if not chess_grid.piece_inside_board(self.y,self.x + offset_x):
-                print("this is loop 1 a test")
+                
                 break
             if(chess_grid.get_piece(self.y,self.x + offset_x) == 0):
-                print("this is loop 1 b test")
+                
                 possible_moves.append([self.y,self.x + offset_x])
                 break
             elif chess_grid.get_piece(self.y,self.x + offset_x).color != self.color:
-                print("this is loop 1 c test")
+                
                 possible_moves.append([self.y,self.x + offset_x])
                 break
             else:
@@ -422,14 +425,12 @@ class King(Pieces):
         offset_x = 1
         while(True):                                  # This loop checks moves on x_decrement plane/scale
             if not chess_grid.piece_inside_board(self.y,self.x - offset_x):
-                print("this is loop 2a  test")
+                
                 break
             if(chess_grid.get_piece(self.y,self.x - offset_x) == 0):
-                print("this is loop 2b  test")
                 possible_moves.append([self.y,self.x - offset_x])
                 break
             elif chess_grid.get_piece(self.y,self.x - offset_x).color != self.color:
-                print("this is loop 2c  test")
                 possible_moves.append([self.y,self.x - offset_x])
                 break
             else:
@@ -517,6 +518,10 @@ class King(Pieces):
             else:
                 break
 
+        for i in chess_grid.assassins:
+            for j in i.possible_moves():
+                if j in possible_moves: 
+                    possible_moves.remove(j)
         return possible_moves
             
 class Pawn(Pieces):
@@ -524,7 +529,6 @@ class Pawn(Pieces):
         Pieces.__init__(self, x, y, img_path, color)
         
     def possible_moves(self):
-        print("Pawn")
         possible_moves = []
         
         # Bug:
@@ -585,6 +589,7 @@ class Chess_board:
         self.highlighted = False
         self.possible_highlights = []
         self.turn_color = "white"
+        self.assassins = []
     
         self.chess_grid_board = []                  # this is to initialize a grid on the screen
         for row in range(self.num_rows):
@@ -613,6 +618,7 @@ class Chess_board:
     
         self.chess_grid_board[0][3] = Queen(3,0, "white_queen", "white")
         self.chess_grid_board[0][4] = King(4,0, "white_king", "white")
+        self.white_king = self.chess_grid_board[0][4]
         
         self.chess_grid_board[7][0] = Rook(0,7, "black_rook", "black")
         self.chess_grid_board[7][7] = Rook(7,7, "black_rook", "black")
@@ -625,6 +631,7 @@ class Chess_board:
     
         self.chess_grid_board[7][3] = Queen(3,7, "black_queen", "black")
         self.chess_grid_board[7][4] = King(4,7, "black_king", "black")
+        self.black_king = self.chess_grid_board[7][4]
         
         return
          
@@ -648,7 +655,7 @@ class Chess_board:
             pos_x  = 0
             pos_y += cell_height
 
-        if self.possible_highlights != 0:                  # this is display the blue image for possible movements of the clicked piece 
+        if len(self.possible_highlights) != 0:                  # this is display the blue image for possible movements of the clicked piece 
             for i in self.possible_highlights: 
                 image(possible_move_img, i[1] * cell_width,i[0] * cell_height, cell_width, cell_height)
        
@@ -673,43 +680,84 @@ class Chess_board:
             return True
     
     def user_clicked(self, row, col):                   # this method is 
-        if not self.piece_inside_board(row, col):
-            self.possible_highlights = 0
-            return
+        global check_black
+        global check_white
         
+        if not self.piece_inside_board(row, col):
+           self.possible_highlights = []
+           return
+                         
         if self.highlighted == False:                    # Check if a piece is here/present
             if chess_grid.get_piece(row,col) == 0: 
                 return
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
+                print(check)
                 self.highlighted = [row,col]
+                current_piece = self.chess_grid_board[row][col]
                 self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
+                
+                # This for the check. Serious bugs present
+                if self.turn_color == 'black':
+                    if check_black == True:
+                        self.possible_highlights = []
+                        for move in self.black_king.possible_moves():
+                            if self.check_move(move):
+                                self.possible_highlights.append(move) 
+                
+                if self.turn_color == 'white':
+                    if check_white == True:
+                        self.possible_highlights = []
+                        for move in self.white_king.possible_moves():
+                            if self.check_move(move):
+                                self.possible_highlights.append(move)      
             else:
                 return
         else: 
             if [row,col] in self.chess_grid_board[self.highlighted[0]][self.highlighted[1]].possible_moves():
                 self.chess_grid_board[row][col] = self.chess_grid_board[self.highlighted[0]][self.highlighted[1]]
-
                 self.chess_grid_board[row][col].x = col           #Update piece's coordinates
                 self.chess_grid_board[row][col].y = row           #Update piece's coordinates
-                
                 self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
-               
+                
+                
+                # check possible moves for the updated piece
+                # loop over these moves and see if the enemy king is in these moves
+                # set check_black || checkWhite to true
+
+                for pos in self.chess_grid_board[row][col].possible_moves():
+                    piece = self.chess_grid_board[pos[0]][pos[1]]
+                    if piece == self.black_king:
+                        check_black = True
+                    elif piece == self.white_king:
+                        check_white = True
+                        
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
                 else:
                     self.turn_color = "white"
-            self.possible_highlights = 0
+            self.possible_highlights = []
             self.highlighted = False
-    
-    def check_king(self):
-        pass
+        
+    def check_move(self, move):
+        for i in self.chess_grid_board:
+            for j in i:
+                if j == 0:
+                    continue
+                if j.color == "white":
+                    for k in j.possible_moves(): 
+                        if k == move:
+                            return False
+                else:
+                    for k in j.possible_moves():
+                        if k == move:
+                            return False
+        return True
+                
     
     def check_mate(self):
         pass
     
-    def possible_highlight_moves(self,row,col):                 # This method calls for possible moves and the piece clicked
-        current_piece = self.chess_grid_board[row][col]
-        self.possible_highlights = current_piece.possible_moves()
+    
 
 
 class Button: 
@@ -835,3 +883,11 @@ def mouseClicked(self):
         print(piece, row, col)
         
 ## Add elif     
+ # temp = current_piece.possible_moves()
+                # if check == True:
+                #     print(self.possible_highlights)
+                #     print("highlighting")
+                #     for i in self.assassins:
+                #         for j in i.possible_moves():
+                #             if j in temp:
+                #                 self.possible_highlights.append(j)
