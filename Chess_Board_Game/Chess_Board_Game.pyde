@@ -583,6 +583,8 @@ class Chess_board:
         self.highlighted = False
         self.possible_highlights = []
         self.turn_color = "white"
+        # self.white_name = None
+        # self.black_name = None
     
         self.chess_grid_board = []                  # this is to initialize a grid on the screen
         for row in range(self.num_rows):
@@ -745,17 +747,35 @@ class Display:
         self.state = "menu"
         self.buttons = [] 
         self.returnbutton = 0
+        self.playgamebutton = 0
         self.chessimage = loadImage(path + "/images/chess_main_image.png")
+        self.backimage = loadImage(path + "/images/inputbackground.png")
+        self.scoreboardimage = loadImage(path + "/images/scoreboard.png")
         self.rulesimage = loadImage(path + "/images/rules.png")
         self.sound_harry = audioPlayer.loadFile(path + "/images/harry_potter_theme.mp3")
+        # self.name = [] 
+        self.whiteplayer = 0
+        self.blackplayer = 0
+        self.NameList = []
+        self.white_name = None
+        self.black_name = None
         
         # Add Buttons; Start, Instruction, Scoreboard 
-        self.buttons.append(Button("Start Game", self.width//2-100, self.height//2 - 50, 50, 250,"game" ))
+        self.buttons.append(Button("Start Game", self.width//2-100, self.height//2 - 50, 50, 250,"nameinput" ))
         self.buttons.append(Button("Instructions", self.width//2-100, self.height//2 + 50, 50, 250,"instruction"))
         self.buttons.append(Button("Scoreboard", self.width//2-100, self.height//2 + 150, 50, 250, "scoreboard"))
         
+        # Add Play Start Button
+        self.playgamebutton =(Button("Play Game", self.width//2-100, self.height//2 - 50, 50, 250,"game" ))
+        
         # Return button 
         self.returnbutton = (Button("Return",self.width//2-100, self.height//2 - 50, 50, 250, "return"))
+        
+        # White and Black name button 
+        # self.name.append(Button("White", self.width//2-100, self.height//2 + 50, 50, 250,"White-Player"))
+        # self.name.append(Button("Black", self.width//2-100, self.height//2 + 150, 50, 250,"Black-Player"))
+        self.whiteplayer = (Button("White", self.width//2-100, self.height//2 + 50, 50, 250,"White-Player"))
+        self.blackplayer = (Button("Black", self.width//2-100, self.height//2 + 150, 50, 250,"Black-Player"))
         
     def menu_display(self):
         background(155)
@@ -763,26 +783,66 @@ class Display:
         self.sound_harry.play()
         for button in self.buttons:
             button.display()
+    
+   
+    def nameinput_display(self): 
+        background(155) 
+        image(self.backimage, 0, 0, height, width)
+        self.playgamebutton.display()
+        self.whiteplayer.display()
+        self.blackplayer.display()
+    
+    def input(message=''):
+        from javax.swing import JOptionPane
+        return JOptionPane.showInputDialog(frame, message)
+    
+    def whiteplayername_display(self): 
+        self.white_name = input(" Enter your name (white): ")
+        print(NameList)
         
+    def blackplayername_display(self): 
+        self.black_name = input(" Enter your name (black): ")
+        print(NameList)
+    
     def instruction_display(self): 
         background(155)
         image(self.rulesimage, 0, 0, height, width)
         self.returnbutton.display()
-        # print("Rules of Chess") 
         
     def scoreboard_display(self): 
         background(155)
-        # print("Bananananan")
+        image(self.scoreboardimage, 0, 0, height, width)
+        self.returnbutton.display()
         
 chess_grid = Chess_board(num_rows, num_cols)
-Game = Display(500,500) 
+Game = Display(500,500)
+# name = {"White","Black"}
+NameList = []
 
 def setup():
     size(num_rows * cell_height, num_cols * cell_width)
+        
+def input(message=''):
+    from javax.swing import JOptionPane
+    return JOptionPane.showInputDialog(frame, message)
 
 def draw():
     if Game.state == "menu":
         Game.menu_display()
+    elif Game.state == "nameinput": 
+        Game.nameinput_display() and Game.whiteplayer_display() and Game.blackplayer_display()
+    elif Game.state == "White-Player": 
+        Game.whiteplayername_display()
+        if Game.black_name == None:
+            Game.state = "nameinput"
+        else:
+            Game.state = "game"
+    elif Game.state == "Black-Player": 
+        Game.blackplayername_display()
+        if Game.white_name == None:
+            Game.state = "nameinput"
+        else:
+            Game.state = 'game'
     elif Game.state == "game":
         chess_grid.display_background()
         chess_grid.display()
@@ -790,7 +850,7 @@ def draw():
         Game.instruction_display() 
     elif Game.state == "scoreboard": 
         Game.scoreboard_display() 
-        
+    
 
 def mouseClicked(self):
     
@@ -803,14 +863,33 @@ def mouseClicked(self):
                 Game.state = b.mode
                 
     elif Game.state == "instruction": 
-        
+        col = mouseX // cell_width
+        row = mouseY // cell_height
+        print("clicked at "  + str(row) + " " + str(col))
+        if Game.returnbutton.contains_mouse(): 
+            Game.state = "menu"
+    
+    elif Game.state == "scoreboard": 
         col = mouseX // cell_width
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
        
         if Game.returnbutton.contains_mouse(): 
             Game.state = "menu"
+            
+    elif Game.state == "nameinput": 
+        col = mouseX // cell_width
+        row = mouseY // cell_height
+        print("clicked at "  + str(row) + " " + str(col))
+    
+        if Game.playgamebutton.contains_mouse(): 
+            Game.state = "game"
+        elif Game.whiteplayer.contains_mouse(): 
+            Game.state = "White-Player"
+        elif Game.blackplayer.contains_mouse(): 
+            Game.state = "Black-Player"    
         
+     
     elif Game.state == "game":
         col = mouseX // cell_width
         row = mouseY // cell_height
