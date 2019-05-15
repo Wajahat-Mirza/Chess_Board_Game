@@ -769,7 +769,7 @@ class Display:
         self.playgamebutton =(Button("Play Game", self.width//2-100, self.height//2 - 50, 50, 250,"game" ))
         
         # Return button 
-        self.returnbutton = (Button("Return",self.width//2-100, self.height//2 - 50, 50, 250, "return"))
+        self.returnbutton = (Button("Return",self.width//2-100, self.height//2 - 20, 50, 250, "return"))
         
         # White and Black name button 
         # self.name.append(Button("White", self.width//2-100, self.height//2 + 50, 50, 250,"White-Player"))
@@ -798,11 +798,14 @@ class Display:
     
     def whiteplayername_display(self): 
         self.white_name = input(" Enter your name (white): ")
-        print(NameList)
+        self.NameList.append(self.white_name.encode('utf-8'))
+        # print(NameList)
         
     def blackplayername_display(self): 
         self.black_name = input(" Enter your name (black): ")
-        print(NameList)
+        self.NameList.append(self.black_name.encode('utf-8'))
+
+        print(self.NameList)
     
     def instruction_display(self): 
         background(155)
@@ -813,18 +816,38 @@ class Display:
         background(155)
         image(self.scoreboardimage, 0, 0, height, width)
         self.returnbutton.display()
+        f = open("scoreboard.txt", "r")
+        with open("scoreboard.txt", "r") as f: 
+            score_dict = {}
+            for line in f: 
+                line = line.strip().split(",") 
+                score_dict[line[0]] = line[1]
+                
         
 chess_grid = Chess_board(num_rows, num_cols)
 Game = Display(500,500)
-# name = {"White","Black"}
-NameList = []
+# NameList = []
+
 
 def setup():
     size(num_rows * cell_height, num_cols * cell_width)
+    # global f
+    # f = createFont("Arial",16)
         
 def input(message=''):
     from javax.swing import JOptionPane
     return JOptionPane.showInputDialog(frame, message)
+
+def textfile():
+    exists = os.path.isfile("scoreboard.txt") 
+    if exists: 
+        return 
+    else: 
+        fh = open('scoreboard.txt', 'w') 
+        fh.write("Name,Scoreboard\n")
+        fh.close()
+        
+textfile()
 
 def draw():
     if Game.state == "menu":
@@ -835,14 +858,19 @@ def draw():
         Game.whiteplayername_display()
         if Game.black_name == None:
             Game.state = "nameinput"
+        # elif len(self.NameList) < 1:
+        #     Game.state = "nameinput"
         else:
             Game.state = "game"
     elif Game.state == "Black-Player": 
         Game.blackplayername_display()
         if Game.white_name == None:
             Game.state = "nameinput"
+        # elif len(self.NameList) < 1:
+        #     Game.state = "nameinput"
         else:
             Game.state = 'game'
+            
     elif Game.state == "game":
         chess_grid.display_background()
         chess_grid.display()
@@ -850,7 +878,12 @@ def draw():
         Game.instruction_display() 
     elif Game.state == "scoreboard": 
         Game.scoreboard_display() 
-    
+        
+    # global f
+    # background(255)
+    # textFont(f,16)            
+    # fill(0)                       
+    # text("scoreboard.txt",10,100)
 
 def mouseClicked(self):
     
@@ -882,7 +915,7 @@ def mouseClicked(self):
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
     
-        if Game.playgamebutton.contains_mouse(): 
+        if Game.playgamebutton.contains_mouse(): #and len(self.NameList) < 1:
             Game.state = "game"
         elif Game.whiteplayer.contains_mouse(): 
             Game.state = "White-Player"
