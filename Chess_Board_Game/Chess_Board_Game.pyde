@@ -645,6 +645,7 @@ class Chess_board:
                     cell_B_img = loadImage(path + "/images/black.png")
                     image(cell_B_img, pos_x,pos_y,cell_width,cell_height)
                     pos_x += cell_width
+                    
             pos_x  = 0
             pos_y += cell_height
 
@@ -769,7 +770,7 @@ class Display:
         self.playgamebutton =(Button("Play Game", self.width//2-100, self.height//2 - 50, 50, 250,"game" ))
         
         # Return button 
-        self.returnbutton = (Button("Return",self.width//2-100, self.height//2 - 20, 50, 250, "return"))
+        self.returnbutton = (Button("Return",self.width//2-100, self.height//2 - 200, 50, 250, "return"))
         
         # White and Black name button 
         # self.name.append(Button("White", self.width//2-100, self.height//2 + 50, 50, 250,"White-Player"))
@@ -791,6 +792,7 @@ class Display:
         self.playgamebutton.display()
         self.whiteplayer.display()
         self.blackplayer.display()
+        self.returnbutton.display()
     
     def input(message=''):
         from javax.swing import JOptionPane
@@ -816,12 +818,17 @@ class Display:
         background(155)
         image(self.scoreboardimage, 0, 0, height, width)
         self.returnbutton.display()
-        f = open("scoreboard.txt", "r")
-        with open("scoreboard.txt", "r") as f: 
+        #f = open("scoreboard.txt", "r")
+        text("Name Score", 0, 100) 
+        with open("scoreboard.txt", "r") as f:
+            lines = f.readlines()
             score_dict = {}
-            for line in f: 
-                line = line.strip().split(",") 
-                score_dict[line[0]] = line[1]
+            for index, line in enumerate(lines):
+                vals = line.split(",")
+                #score_dict[vals[0]] = vals[1].rstrip("\n")
+                text(vals[0], 0, 300+index*100)
+                text(vals[1], 300, 300+index*100)    
+        
                 
         
 chess_grid = Chess_board(num_rows, num_cols)
@@ -853,7 +860,7 @@ def draw():
     if Game.state == "menu":
         Game.menu_display()
     elif Game.state == "nameinput": 
-        Game.nameinput_display() and Game.whiteplayer_display() and Game.blackplayer_display()
+        Game.nameinput_display() and Game.whiteplayer_display() and Game.blackplayer_display() and Game.returnbutton.display()
     elif Game.state == "White-Player": 
         Game.whiteplayername_display()
         if Game.black_name == None:
