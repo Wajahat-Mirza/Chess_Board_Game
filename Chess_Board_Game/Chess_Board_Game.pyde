@@ -29,7 +29,66 @@ class Pieces:                                       # This is the base class
     def display_pieces(self):
         piece_img  = loadImage(path + "/images/" + self.img_path + ".png")       # this will load images
         x, y = self.convertCoord(self.x, self.y)
-        image(piece_img, x, y, cell_width, cell_height)                          # This loads images at x,y position
+        image(piece_img, x, y, cell_width, cell_height)                          # This loads images at x,y position\
+        
+    def limit_moves(self, lpm):
+        flag = 0
+        assassin = []
+        ans = []
+        if self.color == "white":
+            if len(chess_grid.white_eater) != 0:
+                flag = 1
+                assassin = chess_grid.white_eater
+        else:
+            if len(chess_grid.black_eater) != 0:
+                flag = 1
+                assassin = chess_grid.black_eater
+                
+        if flag == 1:
+            print("flagged")
+            for i in lpm:
+                if chess_grid.chess_grid_board[i[0]][i[1]] in assassin:
+                    ans.append(i)
+                    continue
+                
+                real = [self.x, self.y]
+                real_piece = chess_grid.chess_grid_board[i[0]][i[1]]
+                chess_grid.chess_grid_board[i[0]][i[1]] = self
+                chess_grid.chess_grid_board[i[0]][i[1]].x = self.x           #Update piece's coordinates
+                chess_grid.chess_grid_board[i[0]][i[1]].y = self.y
+                temp_possible_moves = chess_grid.chess_grid_board[i[0]][i[1]].possible_moves()
+                
+                
+                global check_white
+                global check_black
+                
+                for j in assassin:
+                    chess_grid.check_move(j)
+                    if self.color == "white":
+                        if check_white == False:
+                            ans.append(i)
+                            break
+                    else:
+                        if check_black == False:
+                            ans.append(i)
+                            break
+                print("are you here?")
+                chess_grid.chess_grid_board[i[0]][i[1]] = real_piece
+                chess_grid.chess_grid_board[real[0]][real[1]] = self
+                chess_grid.chess_grid_board[real[0]][real[1]].x = self.x
+                chess_grid.chess_grid_board[real[0]][real[1]].y = self.y
+
+            if len(ans) == 0:
+                return lpm
+            
+            else:
+                print("yeh", ans)
+                return ans
+            #we'll do the checks here
+        else:
+            print("not flagged")
+            return lpm
+        
     
 class Rook(Pieces):                                  
     def __init__(self, x, y, img_path, color):
@@ -88,6 +147,7 @@ class Rook(Pieces):
             else:
                 break
             offset += 1
+        
         return possible_moves
             
 class Knight(Pieces):
@@ -515,12 +575,30 @@ class King(Pieces):
                 break
             else:
                 break
-
-        for i in chess_grid.assassins:
+        
+        if self.color == "white":
+            lst = chess_grid.white_eater
+        else:
+            lst = chess_grid.black_eater
+        
+        for i in lst:
             for j in i.possible_moves():
-                if j in possible_moves: 
+                if j in possible_moves:
                     possible_moves.remove(j)
         
+        # if len(lst) != 0:
+        #     for i in possible_moves:
+        #         # print(self)
+        #         print(i[0], i[1])
+        #         chess_grid.chess_grid_board[i[0]][i[1]] = self
+        #         # for j in lst:
+        #         #     for k in j.possible_moves():
+        #         #         print("hi")
+        #         #         if k in possible_moves:
+        #         #             print("lol almost died")
+        #         #             possible_moves.remove(k)
+        
+        # chess_grid.chess_grid_board[self.y][self.x] = self
         return possible_moves
             
 class Pawn(Pieces):
@@ -575,6 +653,7 @@ class Pawn(Pieces):
                 if chess_grid.get_piece(self.y + offset,self.x) == 0 and chess_grid.get_piece(self.y + offset_a,self.x) == 0:
                     count = 1
                     possible_moves.append([self.y + offset,self.x])
+        possible_moves = self.limit_moves(possible_moves)
         return possible_moves
         
     
@@ -586,8 +665,8 @@ class Chess_board:
         self.highlighted = False
         self.possible_highlights = []
         self.turn_color = "white"
-        self.assassins = []
-
+        self.white_eater = []
+        self.black_eater = []
         # self.white_name = None
         # self.black_name = None
 
@@ -696,28 +775,13 @@ class Chess_board:
                 current_piece = self.chess_grid_board[row][col]
                 # self.sound_Move
                 self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
-                
-                # This for the check. Serious bugs present
-                # if self.turn_color == 'black':
-                #     if check_black == True:
-                #         self.possible_highlights = []
-                #         for move in self.black_king.possible_moves():
-                #             print("kanlsd")
-                #            # print("yeh King ke moves hain", self.black_king.possible_moves())
-                #             if self.check_move(move, current_piece):
-                #                 self.possible_highlights.append(move) 
-                
-                # if self.turn_color == 'white':
-                #     if check_white == True:
-                #         self.possible_highlights = []
-                #         for move in self.white_king.possible_moves():
-                #             #print("yeh white King ke moves hain", self.white_king.possible_moves())
-                #             if self.check_move(move, current_piece):
-                #                 self.possible_highlights.append(move)      
+    
             else:
                 return
         else: 
+            
             if [row,col] in self.chess_grid_board[self.highlighted[0]][self.highlighted[1]].possible_moves():
+
                 self.chess_grid_board[row][col] = self.chess_grid_board[self.highlighted[0]][self.highlighted[1]]
                 self.chess_grid_board[row][col].x = col           #Update piece's coordinates
                 self.chess_grid_board[row][col].y = row           #Update piece's coordinates
@@ -746,30 +810,26 @@ class Chess_board:
     def check_move(self, move):
         global check_white
         global check_black
+        
+        # print(move.possible_moves())
         for i in move.possible_moves():
             if self.chess_grid_board[i[0]][i[1]] != 0 and self.chess_grid_board[i[0]][i[1]] in self.king_list and self.chess_grid_board[i[0]][i[1]].color != move.color:
+                
                 if move.color == "white":
+                    self.black_eater.append(move)
                     check_black = True
                 else:
+                    self.white_eater.append(move)
                     check_white = True
-
-                return
-                    
-        # print("heereeee")
-        # for i in self.chess_grid_board:
-        #     for j in i:
-        #         if j == 0:
-        #             continue
-        #         if j.color != self.turn_color:
-        #             for k in j.possible_moves():
-        #                 if k == move:
-        #                     print("heereeee")
-        #                     return False
-        #         else:
-        #             #print("yeh check kr raha hun")
-        #             return True
-        # return True
+                break
+            else:
+                check_white = False
+                check_black = False
+        
                 
+    def limit_move(self): 
+        pass
+        
     
     def check_mate(self):
         pass
