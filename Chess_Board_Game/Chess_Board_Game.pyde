@@ -3,6 +3,7 @@
 # Description : Final Project Chess
 
 import os 
+from copy import deepcopy
 path = os.getcwd()
 add_library("minim")
 audioPlayer = Minim(this)
@@ -31,70 +32,70 @@ class Pieces:                                       # This is the base class
         x, y = self.convertCoord(self.x, self.y)
         image(piece_img, x, y, cell_width, cell_height)                          # This loads images at x,y position\
         
-    def limit_moves(self, lpm):
-        flag = 0
-        assassin = []
-        ans = []
-        if self.color == "white":
-            if len(chess_grid.white_eater) != 0:
-                flag = 1
-                assassin = chess_grid.white_eater
-        else:
-            if len(chess_grid.black_eater) != 0:
-                flag = 1
-                assassin = chess_grid.black_eater
+    # def limit_moves(self, lpm):
+    #     flag = 0
+    #     assassin = []
+    #     ans = []
+    #     if self.color == "white":
+    #         if len(chess_grid.white_eater) != 0:
+    #             flag = 1
+    #             assassin = chess_grid.white_eater
+    #     else:
+    #         if len(chess_grid.black_eater) != 0:
+    #             flag = 1
+    #             assassin = chess_grid.black_eater
                 
-        if flag == 1:
-            print("flagged")
-            for i in lpm:
-                if chess_grid.chess_grid_board[i[0]][i[1]] in assassin:
-                    ans.append(i)
-                    continue
+    #     if flag == 1:
+    #         print("flagged")
+    #         for i in lpm:
+    #             if chess_grid.chess_grid_board[i[0]][i[1]] in assassin:
+    #                 ans.append(i)
+    #                 continue
                 
-                real = [self.x, self.y]
-                real_piece = chess_grid.chess_grid_board[i[0]][i[1]]
-                chess_grid.chess_grid_board[i[0]][i[1]] = self
-                chess_grid.chess_grid_board[i[0]][i[1]].x = self.x           #Update piece's coordinates
-                chess_grid.chess_grid_board[i[0]][i[1]].y = self.y
-                temp_possible_moves = chess_grid.chess_grid_board[i[0]][i[1]].possible_moves()
+    #             real = [self.x, self.y]
+    #             real_piece = chess_grid.chess_grid_board[i[0]][i[1]]
+    #             chess_grid.chess_grid_board[i[0]][i[1]] = self
+    #             chess_grid.chess_grid_board[i[0]][i[1]].x = self.x           #Update piece's coordinates
+    #             chess_grid.chess_grid_board[i[0]][i[1]].y = self.y
+    #             temp_possible_moves = chess_grid.chess_grid_board[i[0]][i[1]].possible_moves()
                 
                 
-                global check_white
-                global check_black
+    #             global check_white
+    #             global check_black
                 
-                for j in assassin:
-                    chess_grid.check_move(j)
-                    if self.color == "white":
-                        if check_white == False:
-                            ans.append(i)
-                            break
-                    else:
-                        if check_black == False:
-                            ans.append(i)
-                            break
-                print("are you here?")
-                chess_grid.chess_grid_board[i[0]][i[1]] = real_piece
-                chess_grid.chess_grid_board[real[0]][real[1]] = self
-                chess_grid.chess_grid_board[real[0]][real[1]].x = self.x
-                chess_grid.chess_grid_board[real[0]][real[1]].y = self.y
+    #             for j in assassin:
+    #                 chess_grid.check_move(j)
+    #                 if self.color == "white":
+    #                     if check_white == False:
+    #                         ans.append(i)
+    #                         break
+    #                 else:
+    #                     if check_black == False:
+    #                         ans.append(i)
+    #                         break
+    #             print("are you here?")
+    #             chess_grid.chess_grid_board[i[0]][i[1]] = real_piece
+    #             chess_grid.chess_grid_board[real[0]][real[1]] = self
+    #             chess_grid.chess_grid_board[real[0]][real[1]].x = self.x
+    #             chess_grid.chess_grid_board[real[0]][real[1]].y = self.y
 
-            if len(ans) == 0:
-                return lpm
+    #         if len(ans) == 0:
+    #             return lpm
             
-            else:
-                print("yeh", ans)
-                return ans
-            #we'll do the checks here
-        else:
-            print("not flagged")
-            return lpm
+    #         else:
+    #             print("yeh", ans)
+    #             return ans
+    #         #we'll do the checks here
+    #     else:
+    #         print("not flagged")
+    #         return lpm
         
     
 class Rook(Pieces):                                  
     def __init__(self, x, y, img_path, color):
         Pieces.__init__(self, x, y, img_path, color)
         
-    def possible_moves(self):                        # This checks all the possible moves from the given position of the piece           
+    def possible_moves(self, chess_grid):                        # This checks all the possible moves from the given position of the piece           
         possible_moves = []
         offset = 1
         while(True):                                 # This loop checks moves on x_increment plane/scale               
@@ -154,7 +155,7 @@ class Knight(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
         
-    def possible_moves(self):
+    def possible_moves(self, chess_grid):
         possible_moves = []
         
         offset_y = 1
@@ -273,7 +274,7 @@ class Bishop(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
     
-    def possible_moves(self): 
+    def possible_moves(self, chess_grid): 
         possible_moves = []
         
         offset_y = 1
@@ -341,7 +342,7 @@ class Queen(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
         
-    def possible_moves(self): 
+    def possible_moves(self, chess_grid): 
         possible_moves = []
         
         offset = 1
@@ -461,7 +462,7 @@ class King(Pieces):
     def __init__(self, x, y, img_path,color):
         Pieces.__init__(self, x, y, img_path,color)
         
-    def possible_moves(self): 
+    def possible_moves(self, chess_grid): 
         possible_moves = []
         
         offset_x = 1
@@ -576,15 +577,15 @@ class King(Pieces):
             else:
                 break
         
-        if self.color == "white":
-            lst = chess_grid.white_eater
-        else:
-            lst = chess_grid.black_eater
+        # if self.color == "white":
+        #     lst = chess_grid.white_eater
+        # else:
+        #     lst = chess_grid.black_eater
         
-        for i in lst:
-            for j in i.possible_moves():
-                if j in possible_moves:
-                    possible_moves.remove(j)
+        # for i in lst:
+        #     for j in i.possible_moves():
+        #         if j in possible_moves:
+        #             possible_moves.remove(j)
         
         # if len(lst) != 0:
         #     for i in possible_moves:
@@ -605,9 +606,8 @@ class Pawn(Pieces):
     def __init__(self, x, y, img_path, color):
         Pieces.__init__(self, x, y, img_path, color)
         
-    def possible_moves(self):
+    def possible_moves(self, chess_grid):
         possible_moves = []
-        
         offset = 1                                   # This condition checks moves on black pawns for one forward, and diagonal if attack possible
         if chess_grid.get_piece(self.y,self.x).color == "black":
             if not chess_grid.piece_inside_board(self.y - offset,self.x):
@@ -653,10 +653,10 @@ class Pawn(Pieces):
                 if chess_grid.get_piece(self.y + offset,self.x) == 0 and chess_grid.get_piece(self.y + offset_a,self.x) == 0:
                     count = 1
                     possible_moves.append([self.y + offset,self.x])
-        possible_moves = self.limit_moves(possible_moves)
+        #possible_moves = self.limit_moves(possible_moves)
         return possible_moves
+
         
-    
 class Chess_board:
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows
@@ -759,6 +759,7 @@ class Chess_board:
             return True
     
     def user_clicked(self, row, col):                   # this method is 
+        #print(self.check_king())
         global check_black
         global check_white
         
@@ -767,25 +768,56 @@ class Chess_board:
            return
                          
         if self.highlighted == False:                    # Check if a piece is here/present
-            if chess_grid.get_piece(row,col) == 0: 
+            if real_chess_grid.get_piece(row,col) == 0: 
                 return
+            print("HERE", row, col)
+            print(self.chess_grid_board[row][col])
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
                 #print("abhy chekc yeh ha", check)
                 self.highlighted = [row,col]
                 current_piece = self.chess_grid_board[row][col]
                 # self.sound_Move
-                self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
-    
+                temp = self.chess_grid_board[row][col].possible_moves(self)
+                res = []
+                for r, c in temp:
+                    temp_board = deepcopy(self.chess_grid_board)
+                    # cnt = 0
+                    # for rr in range(num_rows):
+                    #     for cc in range(num_cols):
+                    #         if temp_board[rr][cc] != 0:
+
+                    #             temp_board[rr][cc].color = self.chess_grid_board[rr][cc].color
+                    #             print(temp_board[rr][cc].color)
+                    temp_board[r][c] = temp_board[row][col]
+                    temp_board[r][c].x = c           #Update piece's coordinates
+                    temp_board[r][c].y = r           #Update piece's coordinates
+                    temp_board[row][col] = 0
+                    print("GOING TO CHECK")
+                    if "king" in current_piece.img_path:
+                        if "black" in current_piece.img_path:
+                            w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, c, r)
+                        else:
+                            w,b = self.check_king(temp_board, c, r, self.black_king.x, self.black_king.y)
+                    else:
+                        w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
+                    print("FINISH")
+                    if self.turn_color == "white" and w == False:
+                        res.append([r,c])
+                    elif self.turn_color == "black" and b == False:
+                        res.append([r,c])
+                self.possible_highlights = res
+                print(self.possible_highlights)
             else:
                 return
         else: 
             
-            if [row,col] in self.chess_grid_board[self.highlighted[0]][self.highlighted[1]].possible_moves():
+            if [row,col] in self.chess_grid_board[self.highlighted[0]][self.highlighted[1]].possible_moves(self):
 
                 self.chess_grid_board[row][col] = self.chess_grid_board[self.highlighted[0]][self.highlighted[1]]
                 self.chess_grid_board[row][col].x = col           #Update piece's coordinates
                 self.chess_grid_board[row][col].y = row           #Update piece's coordinates
                 self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
+                self.check_mate()
                 
                 
                 # check possible moves for the updated piece
@@ -799,42 +831,126 @@ class Chess_board:
                 #     elif piece == self.white_king:
                 #         check_white = True
                 
-                self.check_move(self.chess_grid_board[row][col]) 
+                #self.check_move(self.chess_grid_board[row][col]) 
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
                 else:
                     self.turn_color = "white"
             self.possible_highlights = []
             self.highlighted = False
+            
+    def check_king(self, board, wkx, wky, bkx, bky):
+        white_check = False
+        black_check = False
+        temp = Chess_board(num_rows, num_cols)
+        temp.chess_grid_board = board
+        for lc in board:
+            for cell in lc:
+                if cell != 0: 
+                    print(cell)
+                    if cell.color == "black":
+                        moves = cell.possible_moves(temp)
+                        for r,c in moves:
+                            if r == wky and c == wkx:
+                                white_check = True
+                    else: 
+                        moves = cell.possible_moves(temp)
+                        for r,c in moves:
+                            if r == bky and c == bkx:
+                                black_check = True                    
+                    
+                    
         
-    def check_move(self, move):
-        global check_white
-        global check_black
+        return (white_check, black_check)
         
-        # print(move.possible_moves())
-        for i in move.possible_moves():
-            if self.chess_grid_board[i[0]][i[1]] != 0 and self.chess_grid_board[i[0]][i[1]] in self.king_list and self.chess_grid_board[i[0]][i[1]].color != move.color:
+    # def check_move(self, move):
+    #     global check_white
+    #     global check_black
+        
+    #     # print(move.possible_moves())
+    #     for i in move.possible_moves(self):
+    #         if self.chess_grid_board[i[0]][i[1]] != 0 and self.chess_grid_board[i[0]][i[1]] in self.king_list and self.chess_grid_board[i[0]][i[1]].color != move.color:
                 
-                if move.color == "white":
-                    self.black_eater.append(move)
-                    check_black = True
-                else:
-                    self.white_eater.append(move)
-                    check_white = True
-                break
-            else:
-                check_white = False
-                check_black = False
+    #             if move.color == "white":
+    #                 self.black_eater.append(move)
+    #                 check_black = True
+    #             else:
+    #                 self.white_eater.append(move)
+    #                 check_white = True
+    #             break
+    #         else:
+    #             check_white = False
+    #             check_black = False
         
-                
-    def limit_move(self): 
-        pass
-        
-    
     def check_mate(self):
-        pass
-    
-    
+        is_mate = False
+        w,b = self.check_king(self.chess_grid_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
+        if self.turn_color == "white":
+            if w == True:
+                cnt = 0
+                for row in range(self.num_rows):
+                    for col in range(self.num_cols):
+                        cell = self.chess_grid_board[row][col]
+                        if cell != 0 and cell.color == "white":
+                            current_piece = cell
+                            # self.sound_Move
+                            temp = cell.possible_moves(self)
+                            res = []
+                            for r, c in temp:
+                                temp_board = deepcopy(self.chess_grid_board)
+                                temp_board[r][c] = temp_board[row][col]
+                                temp_board[r][c].x = c           #Update piece's coordinates
+                                temp_board[r][c].y = r           #Update piece's coordinates
+                                temp_board[row][col] = 0
+                                if "king" in current_piece.img_path:
+                                    if "black" in current_piece.img_path:
+                                        w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, c, r)
+                                    else:
+                                        w,b = self.check_king(temp_board, c, r, self.black_king.x, self.black_king.y)
+                                else:
+                                    w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
+                            if self.turn_color == "white" and w == False:
+                                res.append([r,c])
+                            elif self.turn_color == "black" and b == False:
+                                res.append([r,c])
+                            cnt += len(res)
+                if cnt == 0:
+                    is_mate = True
+                    self.game_over = True
+        else:
+            if b == True:
+                cnt = 0
+                for row in range(self.num_rows):
+                    for col in range(self.num_cols):
+                        cell = self.chess_grid_board[row][col]
+                        if cell != 0 and cell.color == "black":
+                            current_piece = cell
+                            # self.sound_Move
+                            temp = cell.possible_moves(self)
+                            res = []
+                            for r, c in temp:
+                                temp_board = deepcopy(self.chess_grid_board)
+                                temp_board[r][c] = temp_board[row][col]
+                                temp_board[r][c].x = c           #Update piece's coordinates
+                                temp_board[r][c].y = r           #Update piece's coordinates
+                                temp_board[row][col] = 0
+                                if "king" in current_piece.img_path:
+                                    if "black" in current_piece.img_path:
+                                        w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, c, r)
+                                    else:
+                                        w,b = self.check_king(temp_board, c, r, self.black_king.x, self.black_king.y)
+                                else:
+                                    w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
+                            if self.turn_color == "white" and w == False:
+                                res.append([r,c])
+                            elif self.turn_color == "black" and b == False:
+                                res.append([r,c])
+                            cnt += len(res)
+                if cnt == 0:
+                    is_mate = True
+                    self.game_over = True      
+        print("HGame OVer")    
+        return is_mate
 
 
 class Button: 
@@ -963,7 +1079,7 @@ class Display:
                 # text(vals[1], 300, 300+index*100)    
         
                 
-chess_grid = Chess_board(num_rows, num_cols)
+real_chess_grid = Chess_board(num_rows, num_cols)
 Game = Display(500,500)
 
 
@@ -1008,8 +1124,8 @@ def draw():
             Game.state = 'game'
             
     elif Game.state == "game":
-        chess_grid.display_background()
-        chess_grid.display()
+        real_chess_grid.display_background()
+        real_chess_grid.display()
     elif Game.state == "instruction": 
         Game.instruction_display() 
     elif Game.state == "scoreboard": 
@@ -1059,9 +1175,9 @@ def mouseClicked(self):
         col = mouseX // cell_width
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
-        piece = chess_grid.get_piece(row, col)
+        piece = real_chess_grid.get_piece(row, col)
         
-        chess_grid.user_clicked(row, col)
+        real_chess_grid.user_clicked(row, col)
         print(piece, row, col)
         
 ## Add elif     
