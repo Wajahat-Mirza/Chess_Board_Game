@@ -586,7 +586,6 @@ class Chess_board:
         self.highlighted = False
         self.possible_highlights = []
         self.turn_color = "white"
-
         self.assassins = []
 
         # self.white_name = None
@@ -635,6 +634,7 @@ class Chess_board:
         self.chess_grid_board[7][4] = King(4,7, "black_king", "black")
         self.black_king = self.chess_grid_board[7][4]
         
+        self.king_list = [self.white_king,self.black_king]
         return
          
     def display_background(self):
@@ -698,21 +698,22 @@ class Chess_board:
                 self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
                 
                 # This for the check. Serious bugs present
-                if self.turn_color == 'black':
-                    if check_black == True:
-                        #self.possible_highlights = []
-                        for move in self.black_king.possible_moves():
-                           # print("yeh King ke moves hain", self.black_king.possible_moves())
-                            if self.check_move(move):
-                                self.possible_highlights.append(move) 
+                # if self.turn_color == 'black':
+                #     if check_black == True:
+                #         self.possible_highlights = []
+                #         for move in self.black_king.possible_moves():
+                #             print("kanlsd")
+                #            # print("yeh King ke moves hain", self.black_king.possible_moves())
+                #             if self.check_move(move, current_piece):
+                #                 self.possible_highlights.append(move) 
                 
-                if self.turn_color == 'white':
-                    if check_white == True:
-                        self.possible_highlights = []
-                        for move in self.white_king.possible_moves():
-                            #print("yeh white King ke moves hain", self.white_king.possible_moves())
-                            if self.check_move(move):
-                                self.possible_highlights.append(move)      
+                # if self.turn_color == 'white':
+                #     if check_white == True:
+                #         self.possible_highlights = []
+                #         for move in self.white_king.possible_moves():
+                #             #print("yeh white King ke moves hain", self.white_king.possible_moves())
+                #             if self.check_move(move, current_piece):
+                #                 self.possible_highlights.append(move)      
             else:
                 return
         else: 
@@ -727,13 +728,14 @@ class Chess_board:
                 # loop over these moves and see if the enemy king is in these moves
                 # set check_black || checkWhite to true
 
-                for pos in self.chess_grid_board[row][col].possible_moves():
-                    piece = self.chess_grid_board[pos[0]][pos[1]]
-                    if piece == self.black_king:
-                        check_black = True
-                    elif piece == self.white_king:
-                        check_white = True
-                        
+                # for pos in self.chess_grid_board[row][col].possible_moves():
+                #     piece = self.chess_grid_board[pos[0]][pos[1]]
+                #     if piece == self.black_king:
+                #         check_black = True
+                #     elif piece == self.white_king:
+                #         check_white = True
+                
+                self.check_move(self.chess_grid_board[row][col]) 
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
                 else:
@@ -742,20 +744,31 @@ class Chess_board:
             self.highlighted = False
         
     def check_move(self, move):
-        for i in self.chess_grid_board:
-            for j in i:
-                if j == 0:
-                    continue
-               
-                if j.color == self.turn_color:
-                    #print("Yhe tu bagairat ha")
-                    for k in j.possible_moves(): 
-                        if k == move:
-                            return False
+        global check_white
+        global check_black
+        for i in move.possible_moves():
+            if self.chess_grid_board[i[0]][i[1]] != 0 and self.chess_grid_board[i[0]][i[1]] in self.king_list and self.chess_grid_board[i[0]][i[1]].color != move.color:
+                if move.color == "white":
+                    check_black = True
                 else:
-                    #print("yeh check kr raha hun")
-                    True
-        return True
+                    check_white = True
+
+                return
+                    
+        # print("heereeee")
+        # for i in self.chess_grid_board:
+        #     for j in i:
+        #         if j == 0:
+        #             continue
+        #         if j.color != self.turn_color:
+        #             for k in j.possible_moves():
+        #                 if k == move:
+        #                     print("heereeee")
+        #                     return False
+        #         else:
+        #             #print("yeh check kr raha hun")
+        #             return True
+        # return True
                 
     
     def check_mate(self):
