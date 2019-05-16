@@ -777,21 +777,11 @@ class Chess_board:
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
                 #print("abhy chekc yeh ha", check)
                 self.highlighted = [row,col]               
-                self.possible_highlights = self.chess_grid_board[row][col].possible_moves()
-            else:
-                return
-        else: 
-            if [row,col] in self.chess_grid_board[self.highlighted[0]][self.highlighted[1]].possible_moves():
-                self.chess_grid_board[row][col] = self.chess_grid_board[self.highlighted[0]][self.highlighted[1]]
-                print("MOVE!")
-                self.chess_grid_board[row][col].x = col #Update piece's coordinates
+
                 self.sound_Move.pause()
                 self.sound_Move.rewind()
                 self.sound_Move.play()          
-                self.chess_grid_board[row][col].y = row           #Update piece's coordinates
-                # self.sound_Move 
-                self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
-                
+                # self.sound_Move                 
                 current_piece = self.chess_grid_board[row][col]
                 # self.sound_Move
                 temp = self.chess_grid_board[row][col].possible_moves(self)
@@ -836,19 +826,6 @@ class Chess_board:
                 self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
                 self.check_mate()
                 
-                
-                # check possible moves for the updated piece
-                # loop over these moves and see if the enemy king is in these moves
-                # set check_black || checkWhite to true
-
-                # for pos in self.chess_grid_board[row][col].possible_moves():
-                #     piece = self.chess_grid_board[pos[0]][pos[1]]
-                #     if piece == self.black_king:
-                #         check_black = True
-                #     elif piece == self.white_king:
-                #         check_white = True
-                
-                #self.check_move(self.chess_grid_board[row][col]) 
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
                 else:
