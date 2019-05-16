@@ -669,8 +669,8 @@ class Chess_board:
         self.sound_harry = audioPlayer.loadFile(path + "/images/harry_potter_theme.mp3")
         self.white_eater = []
         self.black_eater = []
-        # self.white_name = None
-        # self.black_name = None
+        self.gameoverimage = loadImage(path + "/images/gameover.png")
+ 
     
         self.chess_grid_board = []         # this is to initialize a grid on the screen
         for row in range(self.num_rows):
@@ -942,8 +942,9 @@ class Chess_board:
                             cnt += len(res)
                 if cnt == 0:
                     is_mate = True
-                    self.game_over = True      
-        print("HGame OVer")    
+                    self.game_over = True  
+                    image(self.gameoverimage, 0, 0, height, width)     
+        print("HGame OVer") 
         return is_mate
 
 class Button: 
