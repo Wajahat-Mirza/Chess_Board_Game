@@ -773,7 +773,6 @@ class Chess_board:
             print("HERE", row, col)
             print(self.chess_grid_board[row][col])
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
-                #print("abhy chekc yeh ha", check)
                 self.highlighted = [row,col]
                 current_piece = self.chess_grid_board[row][col]
                 # self.sound_Move
@@ -781,13 +780,7 @@ class Chess_board:
                 res = []
                 for r, c in temp:
                     temp_board = deepcopy(self.chess_grid_board)
-                    # cnt = 0
-                    # for rr in range(num_rows):
-                    #     for cc in range(num_cols):
-                    #         if temp_board[rr][cc] != 0:
 
-                    #             temp_board[rr][cc].color = self.chess_grid_board[rr][cc].color
-                    #             print(temp_board[rr][cc].color)
                     temp_board[r][c] = temp_board[row][col]
                     temp_board[r][c].x = c           #Update piece's coordinates
                     temp_board[r][c].y = r           #Update piece's coordinates
@@ -819,19 +812,6 @@ class Chess_board:
                 self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
                 self.check_mate()
                 
-                
-                # check possible moves for the updated piece
-                # loop over these moves and see if the enemy king is in these moves
-                # set check_black || checkWhite to true
-
-                # for pos in self.chess_grid_board[row][col].possible_moves():
-                #     piece = self.chess_grid_board[pos[0]][pos[1]]
-                #     if piece == self.black_king:
-                #         check_black = True
-                #     elif piece == self.white_king:
-                #         check_white = True
-                
-                #self.check_move(self.chess_grid_board[row][col]) 
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
                 else:
@@ -858,31 +838,11 @@ class Chess_board:
                         for r,c in moves:
                             if r == bky and c == bkx:
                                 black_check = True                    
-                    
-                    
-        
         return (white_check, black_check)
         
-    # def check_move(self, move):
-    #     global check_white
-    #     global check_black
-        
-    #     # print(move.possible_moves())
-    #     for i in move.possible_moves(self):
-    #         if self.chess_grid_board[i[0]][i[1]] != 0 and self.chess_grid_board[i[0]][i[1]] in self.king_list and self.chess_grid_board[i[0]][i[1]].color != move.color:
-                
-    #             if move.color == "white":
-    #                 self.black_eater.append(move)
-    #                 check_black = True
-    #             else:
-    #                 self.white_eater.append(move)
-    #                 check_white = True
-    #             break
-    #         else:
-    #             check_white = False
-    #             check_black = False
-        
     def check_mate(self):
+        game_over_img = loadImage(path + "/images/game_over.png")
+
         is_mate = False
         w,b = self.check_king(self.chess_grid_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
         if self.turn_color == "white":
@@ -917,6 +877,8 @@ class Chess_board:
                 if cnt == 0:
                     is_mate = True
                     self.game_over = True
+                    image(possible_move_img, 20,20 , cell_width, cell_height)
+
         else:
             if b == True:
                 cnt = 0
