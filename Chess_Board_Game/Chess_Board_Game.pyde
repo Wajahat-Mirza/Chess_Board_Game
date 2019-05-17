@@ -774,19 +774,19 @@ class Chess_board:
 
             if self.chess_grid_board[row][col].color == self.turn_color:          #Check if correct color
                 self.highlighted = [row,col]               
-                self.sound_Move.pause()
-                self.sound_Move.rewind()
-                self.sound_Move.play()          
                 current_piece = self.chess_grid_board[row][col]
+                 
+                        
                 # Create a temporary board to backend vislualize movement for check and checkmate
                 temp = self.chess_grid_board[row][col].possible_moves(self)
                 res = []          # res = result
                 for r, c in temp:
                     temp_board = deepcopy(self.chess_grid_board)   # this import helps to create the temporary board
                     temp_board[r][c] = temp_board[row][col]
-                    temp_board[r][c].x = c           #Update piece's coordinates
+                    temp_board[r][c].x = c     #Update piece's coordinates        
                     temp_board[r][c].y = r           #Update piece's coordinates
                     temp_board[row][col] = 0
+               
                    
                      # This is for when king is in check
                     if "king" in current_piece.img_path:
@@ -814,6 +814,9 @@ class Chess_board:
                 self.chess_grid_board[row][col].y = row           #Update piece's coordinates
                 self.chess_grid_board[self.highlighted[0]][self.highlighted[1]] = 0
                 self.check_mate()
+                self.sound_Move.pause()
+                self.sound_Move.rewind()
+                self.sound_Move.play() 
                 
                 if self.turn_color == "white":                  #Change the color after each turn
                     self.turn_color = "black"
@@ -834,7 +837,6 @@ class Chess_board:
         for lc in board:
             for cell in lc:
                 if cell != 0: 
-                    print(cell)
                     if cell.color == "black":
                         moves = cell.possible_moves(temp)
                         for r,c in moves:
@@ -851,7 +853,9 @@ class Chess_board:
         is_mate = False
 
         w,b = self.check_king(self.chess_grid_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
-        if self.turn_color == "white":
+        print(w,b)
+        print("TURN:", self.turn_color)
+        if self.turn_color == "black":
             # for white
             if w == True:
                 cnt = 0
@@ -877,11 +881,10 @@ class Chess_board:
                                         w,b = self.check_king(temp_board, c, r, self.black_king.x, self.black_king.y)
                                 else:
                                     w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
-                            if self.turn_color == "white" and w == False:
-                                res.append([r,c])
-                            elif self.turn_color == "black" and b == False:
-                                res.append([r,c])
+                                if self.turn_color == "black" and w == False:
+                                    res.append([r,c])
                             cnt += len(res)
+                print("MOVES", cnt)
                 if cnt == 0:
                     is_mate = True
                     self.game_over = True
@@ -911,15 +914,34 @@ class Chess_board:
                                         w,b = self.check_king(temp_board, c, r, self.black_king.x, self.black_king.y)
                                 else:
                                     w,b = self.check_king(temp_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
-                            if self.turn_color == "white" and w == False:
-                                res.append([r,c])
-                            elif self.turn_color == "black" and b == False:
-                                res.append([r,c])
+                                if self.turn_color == "white" and b == False:
+                                    res.append([r,c])
                             cnt += len(res)
+                print("MOVES", cnt)
                 if cnt == 0:
                     is_mate = True
-                    self.game_over = True      
-        print("Game Over")    
+                    self.game_over = True
+                    
+        if is_mate:
+            Game.state = "game-over" 
+            self.white_name = None 
+            self.black_name = None
+            print("Game Over")  
+            print("{} wins!".format(self.turn_color))
+            if self.turn_color == "white":
+                f = open("scoreboard.txt", "a")
+                f.write(Game.white_name)
+                f.write('\n')
+                f.close() 
+            elif self.turn_color == "black":
+                f = open("scoreboard.txt", "a")
+                f.write(Game.black_name)
+                f.write('\n')
+                f.close() 
+            else:
+                f = open("scoreboard.txt", "a")
+                # f.write("ERROR!")
+                f.close()  
         return is_mate
 
 class Button: 
@@ -996,7 +1018,7 @@ class Display:
         self.blackplayer = (Button("Black", self.width//2-100, self.height//2 + 150, 50, 250,"Black-Player"))
         
         # GameOver Button 
-        self.gamoverbutton =(Button("Game Over", self.width//2-100, self.height//2 - 50, 50, 250,"game-over" ))
+        self.gameoverbutton =(Button("Play Again", self.width-470, self.height - 20, 50, 250,"game-over" ))
         
     def menu_display(self):
         background(155)
@@ -1020,7 +1042,7 @@ class Display:
             self.white_name = "No Name Given (white)"
         # self.NameList.append(self.white_name.encode('utf-8'))
         f = open("scoreboard.txt", "a")
-        f.write(self.white_name + "\n" )
+        # f.write(self.white_name + "\n" )
         # print(NameList)
         
     def blackplayername_display(self):      # Adding black name (Player 2) to scoreboard text file 
@@ -1029,7 +1051,7 @@ class Display:
             self.black_name = "No Name Given (black)"
         # self.NameList.append(self.black_name.encode('utf-8'))
         f = open("scoreboard.txt", "a")
-        f.write(self.black_name)
+        # f.write(self.black_name)
         # print(self.NameList)
     
     def instruction_display(self): 
@@ -1042,25 +1064,26 @@ class Display:
         # image(self.scoreboardimage, 0, 0, height, width)
         self.returnbutton.display()
         #f = open("scoreboard.txt", "r")
-        text("  Name         Score  ", 0, 100) 
+        text("   Winner Names   ", 0, 100) 
         with open("scoreboard.txt", "r") as f:
             lines = f.readlines()
             score_dict = {}
             for index, line in enumerate(lines):
+                
                 vals = line.split(",")
+                # print(vals)
                 #score_dict[vals[0]] = vals[1].rstrip("\n")
-                text(vals[0], 0, 300+index*100)
+                text(vals[0], 0, 170+index*80)
                 # text(vals[1], 300, 300+index*100)  
                 
     def gameover_display(self):
-        if self.game_over == True: 
+        # if self.game_over == True: 
             
             background(155) 
             image(self.gameover, 0, 0, height, width)
-        
-        
+            self.gameoverbutton.display()
+    
 
-                
 real_chess_grid = Chess_board(num_rows, num_cols)
 Game = Display(500,500)
 
@@ -1108,15 +1131,17 @@ def draw():
     elif Game.state == "scoreboard": 
         Game.scoreboard_display() 
     elif Game.state == "game-over": 
-        Game.menu_display()
+        Game.gameover_display()
+        # Game.menu_display()
         
 
 def mouseClicked(self):
-    
+    global real_chess_grid
     if Game.state == "menu":
         col = mouseX // cell_width
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
+        real_chess_grid = Chess_board(num_rows, num_cols)
         for b in Game.buttons:
             if b.contains_mouse():
                 Game.state = b.mode
@@ -1163,15 +1188,6 @@ def mouseClicked(self):
         col = mouseX // cell_width
         row = mouseY // cell_height
         print("clicked at "  + str(row) + " " + str(col))
-        if Game.game_over.contains_mouse(): 
+        if Game.gameoverbutton.contains_mouse(): 
             Game.state = "menu"
-            
-## Add elif     
- # temp = current_piece.possible_moves()
-                # if check == True:
-                #     print(self.possible_highlights)
-                #     print("highlighting")
-                #     for i in self.assassins:
-                #         for j in i.possible_moves():
-                #             if j in temp:
-                #                 self.possible_highlights.append(j)
+     
