@@ -1,0 +1,7 @@
+>>>> This is the century old game called Chess. There are basic rules applied here. 
+1. White Player always goes first 
+2. Black player takes the turn after white makes its move 
+3. After each movement, game checks if the king is in check or no 
+4. If the king is in check, it runs through all the possible moves that can block the king from being attacked
+5. If there are any, game will show them in blue if correct moves are possible 
+6. If there are none, game will be over and no further moves can be made.
