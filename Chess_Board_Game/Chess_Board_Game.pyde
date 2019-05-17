@@ -1,6 +1,6 @@
 # Name: Muhammad Wajahat Mirza (mwm356) and Abraham Okbasslaise Hdru (ah3300)
 # Date: May 15th 2019
-# Description : Final Project Chess
+# Description : Final Project Chess Game 
 
 import os 
 from copy import deepcopy
@@ -32,65 +32,7 @@ class Pieces:                                       # This is the base class
         x, y = self.convertCoord(self.x, self.y)
         image(piece_img, x, y, cell_width, cell_height)                          # This loads images at x,y position\
         
-    # def limit_moves(self, lpm):
-    #     flag = 0
-    #     assassin = []
-    #     ans = []
-    #     if self.color == "white":
-    #         if len(chess_grid.white_eater) != 0:
-    #             flag = 1
-    #             assassin = chess_grid.white_eater
-    #     else:
-    #         if len(chess_grid.black_eater) != 0:
-    #             flag = 1
-    #             assassin = chess_grid.black_eater
-                
-    #     if flag == 1:
-    #         print("flagged")
-    #         for i in lpm:
-    #             if chess_grid.chess_grid_board[i[0]][i[1]] in assassin:
-    #                 ans.append(i)
-    #                 continue
-                
-    #             real = [self.x, self.y]
-    #             real_piece = chess_grid.chess_grid_board[i[0]][i[1]]
-    #             chess_grid.chess_grid_board[i[0]][i[1]] = self
-    #             chess_grid.chess_grid_board[i[0]][i[1]].x = self.x           #Update piece's coordinates
-    #             chess_grid.chess_grid_board[i[0]][i[1]].y = self.y
-    #             temp_possible_moves = chess_grid.chess_grid_board[i[0]][i[1]].possible_moves()
-                
-                
-    #             global check_white
-    #             global check_black
-                
-    #             for j in assassin:
-    #                 chess_grid.check_move(j)
-    #                 if self.color == "white":
-    #                     if check_white == False:
-    #                         ans.append(i)
-    #                         break
-    #                 else:
-    #                     if check_black == False:
-    #                         ans.append(i)
-    #                         break
-    #             print("are you here?")
-    #             chess_grid.chess_grid_board[i[0]][i[1]] = real_piece
-    #             chess_grid.chess_grid_board[real[0]][real[1]] = self
-    #             chess_grid.chess_grid_board[real[0]][real[1]].x = self.x
-    #             chess_grid.chess_grid_board[real[0]][real[1]].y = self.y
 
-    #         if len(ans) == 0:
-    #             return lpm
-            
-    #         else:
-    #             print("yeh", ans)
-    #             return ans
-    #         #we'll do the checks here
-    #     else:
-    #         print("not flagged")
-    #         return lpm
-        
-    
 class Rook(Pieces):                                  
     def __init__(self, x, y, img_path, color):
         Pieces.__init__(self, x, y, img_path, color)
@@ -576,30 +518,6 @@ class King(Pieces):
                 break
             else:
                 break
-        
-        # if self.color == "white":
-        #     lst = chess_grid.white_eater
-        # else:
-        #     lst = chess_grid.black_eater
-        
-        # for i in lst:
-        #     for j in i.possible_moves():
-        #         if j in possible_moves:
-        #             possible_moves.remove(j)
-        
-        # if len(lst) != 0:
-        #     for i in possible_moves:
-        #         # print(self)
-        #         print(i[0], i[1])
-        #         chess_grid.chess_grid_board[i[0]][i[1]] = self
-        #         # for j in lst:
-        #         #     for k in j.possible_moves():
-        #         #         print("hi")
-        #         #         if k in possible_moves:
-        #         #             print("lol almost died")
-        #         #             possible_moves.remove(k)
-        
-        # chess_grid.chess_grid_board[self.y][self.x] = self
         return possible_moves
             
 class Pawn(Pieces):
@@ -653,7 +571,6 @@ class Pawn(Pieces):
                 if chess_grid.get_piece(self.y + offset,self.x) == 0 and chess_grid.get_piece(self.y + offset_a,self.x) == 0:
                     count = 1
                     possible_moves.append([self.y + offset,self.x])
-        #possible_moves = self.limit_moves(possible_moves)
         return possible_moves
 
         
@@ -786,7 +703,6 @@ class Chess_board:
                     temp_board[r][c].x = c     #Update piece's coordinates        
                     temp_board[r][c].y = r           #Update piece's coordinates
                     temp_board[row][col] = 0
-               
                    
                      # This is for when king is in check
                     if "king" in current_piece.img_path:
@@ -853,8 +769,6 @@ class Chess_board:
         is_mate = False
 
         w,b = self.check_king(self.chess_grid_board, self.white_king.x, self.white_king.y, self.black_king.x, self.black_king.y)
-        print(w,b)
-        print("TURN:", self.turn_color)
         if self.turn_color == "black":
             # for white
             if w == True:
@@ -884,7 +798,6 @@ class Chess_board:
                                 if self.turn_color == "black" and w == False:
                                     res.append([r,c])
                             cnt += len(res)
-                print("MOVES", cnt)
                 if cnt == 0:
                     is_mate = True
                     self.game_over = True
@@ -898,7 +811,6 @@ class Chess_board:
                         cell = self.chess_grid_board[row][col]
                         if cell != 0 and cell.color == "black":
                             current_piece = cell
-                            # self.sound_Move
                             temp = cell.possible_moves(self)
                             res = []
                             for r, c in temp:
@@ -917,7 +829,6 @@ class Chess_board:
                                 if self.turn_color == "white" and b == False:
                                     res.append([r,c])
                             cnt += len(res)
-                print("MOVES", cnt)
                 if cnt == 0:
                     is_mate = True
                     self.game_over = True
@@ -926,8 +837,6 @@ class Chess_board:
             Game.state = "game-over" 
             self.white_name = None 
             self.black_name = None
-            print("Game Over")  
-            print("{} wins!".format(self.turn_color))
             if self.turn_color == "white":
                 f = open("scoreboard.txt", "a")
                 f.write(Game.white_name)
@@ -940,7 +849,6 @@ class Chess_board:
                 f.close() 
             else:
                 f = open("scoreboard.txt", "a")
-                # f.write("ERROR!")
                 f.close()  
         return is_mate
 
@@ -983,7 +891,6 @@ sound_harry = audioPlayer.loadFile(path + "/images/harry_potter_theme.mp3")
 
 class Display: 
     def __init__(self, width,height): 
-        print("Initializing GameDisplay")
         self.width = width 
         self.height = height 
         self.state = "menu"
@@ -1040,19 +947,13 @@ class Display:
         self.white_name = input(" Enter your name (white): ")
         if self.white_name == None:
             self.white_name = "No Name Given (white)"
-        # self.NameList.append(self.white_name.encode('utf-8'))
         f = open("scoreboard.txt", "a")
-        # f.write(self.white_name + "\n" )
-        # print(NameList)
         
     def blackplayername_display(self):      # Adding black name (Player 2) to scoreboard text file 
         self.black_name = input(" Enter your name (black): ")
         if self.black_name == None:
             self.black_name = "No Name Given (black)"
-        # self.NameList.append(self.black_name.encode('utf-8'))
         f = open("scoreboard.txt", "a")
-        # f.write(self.black_name)
-        # print(self.NameList)
     
     def instruction_display(self): 
         background(155)
@@ -1061,24 +962,17 @@ class Display:
         
     def scoreboard_display(self): 
         background(155)
-        # image(self.scoreboardimage, 0, 0, height, width)
+        image(self.scoreboardimage, 0, 0, height, width)
         self.returnbutton.display()
-        #f = open("scoreboard.txt", "r")
-        text("   Winner Names   ", 0, 100) 
+        text("     Winner Names   ", 0, 100) 
         with open("scoreboard.txt", "r") as f:
             lines = f.readlines()
             score_dict = {}
             for index, line in enumerate(lines):
-                
                 vals = line.split(",")
-                # print(vals)
-                #score_dict[vals[0]] = vals[1].rstrip("\n")
-                text(vals[0], 0, 170+index*80)
-                # text(vals[1], 300, 300+index*100)  
+                text(vals[0], 50, 170+index*80)
                 
     def gameover_display(self):
-        # if self.game_over == True: 
-            
             background(155) 
             image(self.gameover, 0, 0, height, width)
             self.gameoverbutton.display()
@@ -1132,7 +1026,7 @@ def draw():
         Game.scoreboard_display() 
     elif Game.state == "game-over": 
         Game.gameover_display()
-        # Game.menu_display()
+    
         
 
 def mouseClicked(self):
@@ -1140,7 +1034,6 @@ def mouseClicked(self):
     if Game.state == "menu":
         col = mouseX // cell_width
         row = mouseY // cell_height
-        print("clicked at "  + str(row) + " " + str(col))
         real_chess_grid = Chess_board(num_rows, num_cols)
         for b in Game.buttons:
             if b.contains_mouse():
@@ -1149,21 +1042,18 @@ def mouseClicked(self):
     elif Game.state == "instruction": 
         col = mouseX // cell_width
         row = mouseY // cell_height
-        print("clicked at "  + str(row) + " " + str(col))
         if Game.returnbutton.contains_mouse(): 
             Game.state = "menu"
     
     elif Game.state == "scoreboard": 
         col = mouseX // cell_width
         row = mouseY // cell_height
-        print("clicked at "  + str(row) + " " + str(col))
         if Game.returnbutton.contains_mouse(): 
             Game.state = "menu"
             
     elif Game.state == "nameinput": 
         col = mouseX // cell_width
         row = mouseY // cell_height
-        print("clicked at "  + str(row) + " " + str(col))
     
         if Game.playgamebutton.contains_mouse(): 
             Game.state = "game"
@@ -1177,17 +1067,13 @@ def mouseClicked(self):
     elif Game.state == "game":
         col = mouseX // cell_width
         row = mouseY // cell_height
-        
-        print("clicked at "  + str(row) + " " + str(col))
         piece = real_chess_grid.get_piece(row, col)
-        
         real_chess_grid.user_clicked(row, col)
-        print(piece, row, col)
+   
     
     elif Game.state == "game-over": 
         col = mouseX // cell_width
         row = mouseY // cell_height
-        print("clicked at "  + str(row) + " " + str(col))
         if Game.gameoverbutton.contains_mouse(): 
             Game.state = "menu"
      
